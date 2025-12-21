@@ -1,0 +1,408 @@
+[
+  {
+    "profession": "Arcane Extraction",
+    "tier": 2,
+    "name": "Charged Shard",
+    "description": "Shard containing raw elemental energy",
+    "use": "useful for alchemy or power cores."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 1,
+    "name": "Arcane Thread",
+    "description": "Strands of inert magic from old relics",
+    "use": "useful for scrolls or wands."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 3,
+    "name": "Abyssal Power Cell",
+    "description": "Black orb humming with corrupt energy",
+    "use": "useful for dangerous or unstable devices."
+  },
+  {
+    "profession": "Mining",
+    "tier": 3,
+    "name": "Ebon Amber",
+    "description": "Black crystal infused with faint light",
+    "use": "can be refined into rare spell foci."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 1,
+    "name": "Scaled Frog Legs",
+    "description": "Common amphibian found in rivers and ponds",
+    "use": "useful for alchemy or food."
+  },
+  {
+    "profession": "Mining",
+    "tier": 3,
+    "name": "Netherstone Fragment",
+    "description": "Corrupted stone pulsing with abyssal power",
+    "use": "useful for dark enchantments or artifacts."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 3,
+    "name": "Nether Bat Wing",
+    "description": "Abyssal creature found near corrupted ruins",
+    "use": "useful for alchemy or enchantments."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 3,
+    "name": "Echo Core",
+    "description": "Crystal that hums with memory magic",
+    "use": "useful for illusion or divination gear."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 1,
+    "name": "Sunfruit",
+    "description": "Common tropical fruit near Jiggow",
+    "use": "useful for food and basic potions."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 2,
+    "name": "Starlit Fungi",
+    "description": "Bioluminescent fungus deep in forests",
+    "use": "useful for glowing potions or lightsources."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 1,
+    "name": "Wild Turkey Meat",
+    "description": "Common game from the coastal roads and jungle edges",
+    "use": "useful for cooking and rations."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 3,
+    "name": "Dreamfruit",
+    "description": "Fruit from dream-touched trees",
+    "use": "can induce visions or restore spell slots."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 2,
+    "name": "Aether Crystal",
+    "description": "Pure condensed mana crystal",
+    "use": "useful for storing spell energy."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 3,
+    "name": "Shadowpanther Pelt",
+    "description": "Abyss-touched predator’s hide",
+    "use": "useful for stealth gear or enchanted leather."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 1,
+    "name": "Bent Gear",
+    "description": "Common mechanical scrap from carts or tools",
+    "use": "useful for basic tinkering."
+  },
+  {
+    "profession": "Mining",
+    "tier": 1,
+    "name": "Salt Crystal",
+    "description": "Found near caves and coastal cliffs",
+    "use": "useful for preservation or alchemy."
+  },
+  {
+    "profession": "Mining",
+    "tier": 2,
+    "name": "Bronzeshade Vein",
+    "description": "Strong alloy-rich ore from rocky tunnels",
+    "use": "useful for durable weapon crafting."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 3,
+    "name": "Umbral Cap",
+    "description": "Pitch-black fungus feeding on darkness",
+    "use": "used in shadow magic or stealth potions."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 3,
+    "name": "Living Metal Sliver",
+    "description": "Animated shard of self-moving metal",
+    "use": "useful for self-repairing constructs or armor."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 3,
+    "name": "Heartmoss",
+    "description": "Dark, creeping moss that forms lumpy nodules shaped vaguely like hearts, pulsing faintly.",
+    "use": "can amplify healing or harm depending on use."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 1,
+    "name": "Rootcap Mushroom",
+    "description": "Common ground fungus near shaded trails",
+    "use": "useful for basic stews or tonics."
+  },
+  {
+    "profession": "Mining",
+    "tier": 2,
+    "name": "Whisper Quartz",
+    "description": "Faintly humming mineral near magical fields",
+    "use": "useful for storing minor magic."
+  },
+  {
+    "profession": "Mining",
+    "tier": 2,
+    "name": "Lumen Ore",
+    "description": "Softly glowing mineral from deeper caverns",
+    "use": "useful for light-based gear or enchantments."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 2,
+    "name": "Steamcore Fragment",
+    "description": "Small power core from defunct constructs",
+    "use": "useful for powering tinkered items."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 2,
+    "name": "Thunderbird Feather",
+    "description": "From rare jungle birds prized by hunters",
+    "use": "materials for magical arrows or charms."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 3,
+    "name": "Echo Sap",
+    "description": "Thick, dark amber sap that clings to fingers and faintly echoes nearby sounds.",
+    "use": "can amplify healing or harm depending on use."
+  },
+  {
+    "profession": "Mining",
+    "tier": 1,
+    "name": "Iron Shard",
+    "description": "Common metal along the cliffs of Jiggow",
+    "use": "useful for forging or trade."
+  },
+  {
+    "profession": "Mining",
+    "tier": 1,
+    "name": "Jade Pebble",
+    "description": "Small decorative stone found in riverbeds",
+    "use": "useful for jewelry or currency."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 2,
+    "name": "Vermilion Fern",
+    "description": "Delicate fern with bright red fronds that seem warm to the touch.",
+    "use": "useful for resistance potions or vitality draughts."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 3,
+    "name": "Nether Spore",
+    "description": "Corrupted fungus exuding red mist",
+    "use": "useful for toxic concoctions or curse brews."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 3,
+    "name": "Nether Essence",
+    "description": "Essence of corrupted planar energy",
+    "use": "useful for dark or experimental enchantments."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 2,
+    "name": "Spicebulb",
+    "description": "Spicy root bulb with magical aroma",
+    "use": "useful for powerful cooking or stimulant draughts."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 2,
+    "name": "Runed Cog",
+    "description": "Metal gear etched with faint runes",
+    "use": "useful for clockwork or enchanted tools."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 1,
+    "name": "Residual Mana Dust",
+    "description": "Faint traces of spent magic in trinkets",
+    "use": "useful for minor enchantments."
+  },
+  {
+    "profession": "Mining",
+    "tier": 3,
+    "name": "Heart of the Earth",
+    "description": "Pulsing core of condensed elemental energy",
+    "use": "legendary crafting material for armor or golems."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 1,
+    "name": "Cracked Gem Core",
+    "description": "Small, unstable magical gem fragment",
+    "use": "useful for crafting or alchemy catalysts."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 1,
+    "name": "Jungle Boar Hide",
+    "description": "Common game from the coastal roads and jungle edges",
+    "use": "useful for simple leather or cooking."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 2,
+    "name": "Dewlight Bulb",
+    "description": "Plump, pale bulb that beads with cool, glowing droplets at dusk.",
+    "use": "useful for resistance potions or vitality draughts."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 3,
+    "name": "Echoing Gear",
+    "description": "Mechanical gear that resonates faintly with sound",
+    "use": "useful for sonic or resonance items."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 1,
+    "name": "Marrowleaf",
+    "description": "Small pale-green leaves with white, bone-like veins and a faint herbal scent.",
+    "use": "can make simple poultices or minor healing salves."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 1,
+    "name": "Glowmoss",
+    "description": "Soft mats of pale moss that emit a gentle greenish glow in darkness.",
+    "use": "can make simple poultices or minor healing salves."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 2,
+    "name": "Binding Sigil Fragment",
+    "description": "Piece of a broken sealing rune",
+    "use": "useful for barrier or warding magic."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 1,
+    "name": "Worn Mechanism",
+    "description": "Broken gear or hinge from old machines",
+    "use": "useful for repair or crafting parts."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 2,
+    "name": "Ghostcap",
+    "description": "Translucent mushroom glowing faintly at night",
+    "use": "useful for invisibility or illusion brews."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 3,
+    "name": "Eldritch Carapace",
+    "description": "Armor plates from twisted aberrations",
+    "use": "useful for crafting resilient armors."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 1,
+    "name": "Drift Berries",
+    "description": "Bright berries found along riverbanks",
+    "use": "useful for dyes or food."
+  },
+  {
+    "profession": "Arcane Extraction",
+    "tier": 3,
+    "name": "Corrupted Rune Shard",
+    "description": "Fragment of a cursed rune stone",
+    "use": "useful for cursed or necrotic artifacts."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 3,
+    "name": "Netherbloom",
+    "description": "Black-violet flower whose petals shimmer with an eerie inner light.",
+    "use": "can amplify healing or harm depending on use."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 2,
+    "name": "Ironvine",
+    "description": "Tough, dark green vine with a faint metallic sheen along its surface.",
+    "use": "useful for resistance potions or vitality draughts."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 2,
+    "name": "Glowfang Venison",
+    "description": "From nocturnal glowing deer-like beasts",
+    "use": "materials for exotic meals or light potions."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 2,
+    "name": "Enchanted Spring",
+    "description": "Metal spring infused with magic tension",
+    "use": "useful for traps or repeating mechanisms."
+  },
+  {
+    "profession": "Herbalism",
+    "tier": 1,
+    "name": "Bitterroot",
+    "description": "Knotted brown root with a sharp, bitter taste that numbs the tongue.",
+    "use": "can make simple poultices or minor healing salves."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 1,
+    "name": "Scrap Iron Plate",
+    "description": "Rusted armor piece or metal sheet",
+    "use": "useful for reforging."
+  },
+  {
+    "profession": "Hunting",
+    "tier": 2,
+    "name": "Crimson Basilisk Scales",
+    "description": "Found deeper in the jungle or cliffsides",
+    "use": "materials for armor or rare potions."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 1,
+    "name": "Wild Turkey Feather",
+    "description": "Long, iridescent feather plucked from a wild turkey, banded with earthy brown and cream stripes.",
+    "use": "Used for arrow fletching, small talismans, quills, or decorative accents on cloaks and hats."
+  },
+  {
+    "profession": "Foraging",
+    "tier": 1,
+    "name": "Boar Hide",
+    "description": "Thick strip of boar hide, rough and bristled, with a strong musky scent and tough outer layer.",
+    "use": "Useful for crafting leather armor, sturdy straps, shield padding, or trade goods."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 1,
+    "name": "Weaver’s Thread",
+    "description": "Fine, tightly spun thread, surprisingly strong for its thinness, usually wound around a small wooden spindle.",
+    "use": "Used in tailoring and repairs, reinforcing seams in clothing, armor padding, or binding small charms and spell foci."
+  },
+  {
+    "profession": "Scrapping",
+    "tier": 2,
+    "name": "Set of small gears and wires.",
+    "description": "Assorted tiny brass gears, screws, and thin insulated wires salvaged from broken devices and clockwork.",
+    "use": "Essential for repairing simple mechanisms, crafting gadgets, traps, or augmenting arcane-technological items."
+  }
+]

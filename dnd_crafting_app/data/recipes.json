@@ -1,0 +1,1567 @@
+[
+  {
+    "profession": "Cooking",
+    "tier": 1,
+    "name": "Hearty Jungle Stew",
+    "description": "Comforting, filling meal that restores minor vitality.",
+    "use": "Heals 1d4 HP, grants advantage on next Survival check.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Wild Turkey Meat",
+        "qty": 1,
+        "gathering": "Hunting"
+      },
+      {
+        "name": "Rootcap Mushroom",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Salt Crystal",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 1,
+    "name": "Spiced Drift Berry Tart",
+    "description": "A sweet pie infused with mild magical warmth.",
+    "use": "Restores 1 HP and removes mild exhaustion effects (flavor only).",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Drift Berries",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Spicebulb",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Sunfruit",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 1,
+    "name": "Hunter’s Jerky",
+    "description": "Smoked jerky with faint luminescent edges.",
+    "use": "Grants +1 to saving throws vs poison for 1 hour.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Jungle Boar Hide (fat)",
+        "qty": 1,
+        "gathering": "Hunting"
+      },
+      {
+        "name": "Salt Crystal",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Glowmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 2,
+    "name": "Glowfang Roast",
+    "description": "Mystical roast that strengthens the body.",
+    "use": "Heals 2d4 HP, adds +1 to Strength checks for 1 hour.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Glowfang Venison",
+        "qty": 1,
+        "gathering": "Hunting"
+      },
+      {
+        "name": "Vermilion Fern",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Ironvine sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 2,
+    "name": "Thunderbird Omelet",
+    "description": "Energizing dish that crackles faintly.",
+    "use": "Grants advantage on initiative rolls until next long rest.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Thunderbird Feather (essence)",
+        "qty": 1,
+        "gathering": "Hunting"
+      },
+      {
+        "name": "Dewlight Bulb",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Spicebulb",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 2,
+    "name": "Mystic Broth",
+    "description": "Warm soup that pulses faintly with arcane energy.",
+    "use": "Restores 1 spell slot of level 1 (once per day).",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echo Sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Bitterroot",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Marrowleaf",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 3,
+    "name": "Echo Feast",
+    "description": "A meal that connects diners through memory.",
+    "use": "Allows telepathic communication within 30 ft for 1 hour.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Dreamfruit",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Starlit Fungi",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 3,
+    "name": "Heartmoss Elixir",
+    "description": "A rare drink balancing life and corruption.",
+    "use": "Choose one: heal 3d4 HP or gain +2 AC for 1 minute.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Ghostcap",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Dewlight Bulb",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Cooking",
+    "tier": 3,
+    "name": "Netherbloom Wine",
+    "description": "Deep crimson wine that glows faintly under moonlight.",
+    "use": "Grants resistance to necrotic damage for 1 hour.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Netherbloom",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Nether Essence",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Spicebulb",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 1,
+    "name": "Minor Healing Draught",
+    "description": "A faintly glowing potion.",
+    "use": "Heals 1d4+1 HP.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Glowmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Marrowleaf",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Iron Shard",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 1,
+    "name": "Antitoxin Vial",
+    "description": "A simple antidote brewed from jungle herbs.",
+    "use": "Removes poison or grants advantage on saves vs poison.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Bitterroot",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Dewlight Bulb",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Salt Crystal",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 1,
+    "name": "Fireflask",
+    "description": "Explosive concoction that ignites on impact.",
+    "use": "1d6 fire damage (thrown, 10 ft radius).",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Spicebulb",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Lumen Ore",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Drift Berries",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 2,
+    "name": "Vitality Potion",
+    "description": "Restores energy and rejuvenates muscles.",
+    "use": "Removes one level of exhaustion (once/day item).",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Ironvine",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Starlit Fungi",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 2,
+    "name": "Chameleon Oil",
+    "description": "Changes user’s skin to blend with surroundings.",
+    "use": "Advantage on Stealth for 1 hour.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Ghostcap",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Rootcap Mushroom",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Arcane Thread",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 2,
+    "name": "Resonant Flask",
+    "description": "A vibrating potion filled with kinetic energy.",
+    "use": "Adds +1d4 to melee damage for 10 minutes.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Charged Shard",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Binding Sigil Fragment",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Dewlight Bulb",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 3,
+    "name": "Netherfire Phial",
+    "description": "Swirling red-black flame in liquid form.",
+    "use": "Deals 2d8 necrotic/fire in 15 ft line.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Nether Essence",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ebon Amber",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Nether Spore",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 3,
+    "name": "Lucid Dream Elixir",
+    "description": "Heightens dreams and perception.",
+    "use": "Gives advantage on Insight and Arcana for 1 hour.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Dreamfruit",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Vermilion Fern",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Alchemy",
+    "tier": 3,
+    "name": "Elixir of Echoed Life",
+    "description": "Strange brew linking drinker to the Weave.",
+    "use": "Heals 4d4 HP, restores 1 spell slot (level 2 or lower).",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Netherbloom",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 1,
+    "name": "Iron Shortsword",
+    "description": "Basic but reliable weapon.",
+    "use": "Simple +1 to attack rolls for one encounter.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Iron Shard",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Scrap Iron Plate",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Bent Gear",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 1,
+    "name": "Traveler’s Buckle",
+    "description": "Polished buckle that resists tarnish.",
+    "use": "+1 AC vs ranged attacks for 1 hour.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Bronzeshade Vein",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Salt Crystal",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Worn Mechanism",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 1,
+    "name": "Sturdy Dagger",
+    "description": "Well-balanced knife.",
+    "use": "Counts as magical for overcoming resistance.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Iron Shard",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Scrap Iron Plate",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Runed Cog",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 2,
+    "name": "Lumen Blade",
+    "description": "Glowing sword humming softly.",
+    "use": "Deals +1 radiant damage.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Lumen Ore",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Runed Cog",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Vermilion Fern sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 2,
+    "name": "Smith’s Armguard",
+    "description": "Reinforced bracer that steadies the arm.",
+    "use": "+1 to attack rolls for 1 hour (once/day).",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Bronzeshade Vein",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Enchanted Spring",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 2,
+    "name": "Rune-etched Shield",
+    "description": "Hums faintly when struck.",
+    "use": "Absorbs 5 damage from next attack once per day.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Binding Sigil Fragment",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ironvine",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 3,
+    "name": "Nethersteel Blade",
+    "description": "Weapon radiating abyssal heat.",
+    "use": "+1 weapon that deals +1d4 necrotic damage.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Netherstone Fragment",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ebon Amber",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 3,
+    "name": "Heart of the Forge Hammer",
+    "description": "Glows red-hot when near corruption.",
+    "use": "Can repair any metal item instantly 1/day.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Heart of the Earth",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Living Metal Sliver",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Iron Shard",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Blacksmithing",
+    "tier": 3,
+    "name": "Echoing Shield",
+    "description": "Resonates with the wielder’s heartbeat.",
+    "use": "Grants +1 AC and resistance to thunder damage.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echoing Gear",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 1,
+    "name": "Traveler’s Cloak",
+    "description": "A durable woven cloak.",
+    "use": "Advantage vs cold weather and light rain.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Wild Turkey Feather",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Weaver’s Thread",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Bitterroot",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 1,
+    "name": "Stitched Satchel",
+    "description": "Handcrafted satchel that resists tearing.",
+    "use": "+1 inventory slot for small items.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Boar Hide",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Drift Berries (dye)",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Jade Pebble",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 1,
+    "name": "Gloves of Grip",
+    "description": "Grippy gloves with faint luminescence.",
+    "use": "Advantage on Climb or Sleight of Hand.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Ironvine",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Weaver’s Thread",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Glowmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 2,
+    "name": "Cloak of the Hunt",
+    "description": "Shifting-pattern cloak aiding stealth.",
+    "use": "Advantage on Stealth in dim light.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Shadowpanther Pelt",
+        "qty": 1,
+        "gathering": "Hunting"
+      },
+      {
+        "name": "Ghostcap",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Vermilion Fern",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 2,
+    "name": "Reinforced Gambeson",
+    "description": "Light armor with flexible plating.",
+    "use": "+1 AC while worn.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Bronzeshade Vein (plates)",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Ironvine",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 2,
+    "name": "Traveler’s Veil",
+    "description": "A luminous veil that filters corruption.",
+    "use": "Advantage on saves vs charm and fear.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Starlit Fungi",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Weaver’s Thread",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Echo Sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 3,
+    "name": "Cloak of Echoed Shadows",
+    "description": "Appears translucent in darkness.",
+    "use": "Invisibility for 1 minute once per day.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Umbral Cap",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Nether Essence",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 3,
+    "name": "Vest of Heartlight",
+    "description": "Softly glowing garment of inner warmth.",
+    "use": "+2 temporary HP after each long rest.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Dreamfruit fiber",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Netherbloom thread",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tailoring",
+    "tier": 3,
+    "name": "Runeweave Mantle",
+    "description": "Threads woven with runes of protection.",
+    "use": "+1 to saving throws vs magic.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Echo Sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Ebon Amber",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 1,
+    "name": "Lesser Focus Ring",
+    "description": "Simple attunement focus.",
+    "use": "+1 to Arcana checks while worn.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Jade Pebble",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Arcane Thread",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Bitterroot",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 1,
+    "name": "Glowgem Amulet",
+    "description": "Soft light source on command.",
+    "use": "Casts Light cantrip.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Lumen Ore",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Drift Berries (dye)",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Scrap Iron Plate",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 1,
+    "name": "Charm of Clarity",
+    "description": "Clears the mind of confusion.",
+    "use": "Advantage on next Wisdom save.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Marrowleaf",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Cracked Gem Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Glowmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 2,
+    "name": "Ring of Resistance",
+    "description": "Defensive enchantment woven into metal.",
+    "use": "Resistance to one elemental type for 1 hour.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Binding Sigil Fragment",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ironvine",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 2,
+    "name": "Amulet of Resonance",
+    "description": "Hums in harmony with the Weave.",
+    "use": "Grants +1 spell save DC for 1 hour.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Echo Sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Aether Crystal",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Starlit Fungi",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 2,
+    "name": "Focus Gem of Clarity",
+    "description": "Improves magical focus temporarily.",
+    "use": "Advantage on spell attack rolls for 10 minutes.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Vermilion Fern",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Jeweler’s dust",
+        "qty": 1,
+        "gathering": ""
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 3,
+    "name": "Ring of Echoed Spells",
+    "description": "Stores a single spell.",
+    "use": "Cast 1 stored spell up to 2nd level.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Nether Essence",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ebon Amber",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 3,
+    "name": "Nether Pendant",
+    "description": "Abyssal focus that pulses faintly.",
+    "use": "+1 spell attack and damage for necrotic spells.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Netherbloom",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Corrupted Rune Shard",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Lumen Ore",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Enchanting",
+    "tier": 3,
+    "name": "Crown of Whispering Light",
+    "description": "A glowing circlet that enhances telepathy.",
+    "use": "Telepathic bond (30 ft) for 1 hour.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echoing Gear",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Dreamfruit",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 1,
+    "name": "Scroll of Illumination",
+    "description": "Wax-sealed scroll radiating light.",
+    "use": "Casts Light or Guidance.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Arcane Thread",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Glowmoss ink",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Jade Pebble",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 1,
+    "name": "Map of Safe Roads",
+    "description": "Shows safe paths around Jigow and Emerald Loop.",
+    "use": "+2 to next Survival check.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Rootcap Mushroom dye",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Ironvine charcoal",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Drift Berries",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 1,
+    "name": "Scroll of Calm Words",
+    "description": "Calming scroll for tense talks.",
+    "use": "Casts Calm Emotions (1/day item).",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Bitterroot ink",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Dewlight Bulb",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Glowmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 2,
+    "name": "Scroll of Binding",
+    "description": "Scroll scribed in silver ink.",
+    "use": "Casts Hold Person (1/day item).",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Runed Cog dust",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Binding Sigil Fragment",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 2,
+    "name": "Prayer of Renewal",
+    "description": "Blessed parchment infused with life.",
+    "use": "Casts Cure Wounds (2nd level).",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Echo Sap",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Heartmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Vermilion Fern",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 2,
+    "name": "Scroll of Fortune",
+    "description": "Script glowing faintly gold.",
+    "use": "Casts Bless (1/day item).",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Jade Pebble ink",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Dreamfruit dust",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Lumen Ore",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 3,
+    "name": "Scroll of Echoed Dreams",
+    "description": "Weaving words from dreams themselves.",
+    "use": "Casts Clairvoyance (once).",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Dreamfruit ink",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Nether Essence",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 3,
+    "name": "Treatise of the Netherdeep",
+    "description": "A forbidden manual on abyssal power.",
+    "use": "Advantage on Arcana checks about corruption.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Corrupted Rune Shard",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Netherstone Fragment",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Scribing",
+    "tier": 3,
+    "name": "Scroll of Life’s Pulse",
+    "description": "Scroll hums like a heartbeat.",
+    "use": "Casts Revivify (once).",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Heart of the Earth dust",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Heartmoss ink",
+        "qty": 1,
+        "gathering": "Herbalism"
+      },
+      {
+        "name": "Echoing Gear",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 1,
+    "name": "Clockwork Critter",
+    "description": "A small moving toy.",
+    "use": "Acts as Familiar for 1 hour.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Bent Gear",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Worn Mechanism",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Glowmoss",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 1,
+    "name": "Signal Flare",
+    "description": "Simple handheld flare device.",
+    "use": "Fires 60 ft bright light for 1 min.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Steamcore Fragment",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Drift Berries",
+        "qty": 1,
+        "gathering": "Foraging"
+      },
+      {
+        "name": "Iron Shard",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 1,
+    "name": "Reinforced Lockpick",
+    "description": "",
+    "use": "+1 to Sleight of Hand checks to pick locks.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Set of small gears and wires.",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 2,
+    "name": "Aether Compass",
+    "description": "Points toward active magical energy.",
+    "use": "Detect Magic once per long rest.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Aether Crystal",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Runed Cog",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 2,
+    "name": "Stabilizer Band",
+    "description": "A metallic wrist band that hums softly.",
+    "use": "Advantage on Concentration saves for 1 hour.",
+    "output_qty": 3,
+    "components": [
+      {
+        "name": "Enchanted Spring",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Binding Sigil Fragment",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ironvine",
+        "qty": 1,
+        "gathering": "Herbalism"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 2,
+    "name": "Auto-Grappler",
+    "description": "Launches a small hook with rope.",
+    "use": "Allows climbing 30 ft as bonus action.",
+    "output_qty": 1,
+    "components": [
+      {
+        "name": "Steamcore Fragment",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Iron Shard",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Starlit Fungi",
+        "qty": 1,
+        "gathering": "Foraging"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 3,
+    "name": "Nether Lantern",
+    "description": "Dark lamp that reveals invisible beings.",
+    "use": "Casts See Invisibility (1/day).",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Nether Essence",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Echo Core",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Ebon Amber",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 3,
+    "name": "Echo Resonator",
+    "description": "Emits resonant pulse detecting creatures nearby.",
+    "use": "Detects movement in 30 ft radius for 10 min.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Echoing Gear",
+        "qty": 1,
+        "gathering": "Scrapping"
+      },
+      {
+        "name": "Aether Crystal",
+        "qty": 1,
+        "gathering": "Arcane Extraction"
+      },
+      {
+        "name": "Living Metal Sliver",
+        "qty": 1,
+        "gathering": "Scrapping"
+      }
+    ]
+  },
+  {
+    "profession": "Tinkering",
+    "tier": 3,
+    "name": "Heart Engine",
+    "description": "A self-powering magical core.",
+    "use": "Can power a construct or revive a machine.",
+    "output_qty": 2,
+    "components": [
+      {
+        "name": "Heart of the Earth",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Netherstone Fragment",
+        "qty": 1,
+        "gathering": "Mining"
+      },
+      {
+        "name": "Whisper Quartz",
+        "qty": 1,
+        "gathering": "Mining"
+      }
+    ]
+  }
+]
