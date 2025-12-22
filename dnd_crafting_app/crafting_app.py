@@ -5,11 +5,33 @@ from typing import Dict, Any, List, Optional, Tuple
 import copy
 import random
 import math
+import re
 
 import streamlit as st
 
+# --- Optional dependency (Supabase) ---
+try:
+    from supabase import create_client, Client  # type: ignore
+except Exception:
+    create_client = None
+    Client = None  # type: ignore
+
 st.set_page_config(page_title="D&D Crafting Simulator", layout="wide")
 DATA_DIR = Path(__file__).parent / "data"
+
+# -----------------------------
+# Supabase
+# -----------------------------
+def supabase_client() -> Optional["Client"]:
+    if create_client is None:
+        return None
+    url = st.secrets.get("SUPABASE_URL")
+    key = st.secrets.get("SUPABASE_ANON_KEY")
+    if not url or not key:
+        return None
+    return create_client(url, key)
+
+SB = supabase_client()
 
 # -----------------------------
 # Load JSON (cache bust on file change)
@@ -32,32 +54,33 @@ XP_TABLE = {int(k): int(v) for k, v in XP_TABLE_RAW.items()}
 # -----------------------------
 # Constants
 # -----------------------------
-SELL_RATE = 0.5  # sell price = vendor price * 50%
+SELL_RATE = 0.5
 
-# Vendor:
-# - offers 0..3 distinct items (never more than 3)
-# - each line qty max 4
 VENDOR_MAX_LINES = 3
 VENDOR_QTY_MAX = 4
-
-# Tier odds (normalized in code)
-# T ~ 90%, T+1 ~ 45%, T+2 ~ 15%
 VENDOR_TIER_WEIGHTS = {"T": 0.90, "T+1": 0.45, "T+2": 0.15}
-
-# Qty odds (normalized in code) 1..4
 VENDOR_QTY_WEIGHTS = {1: 0.50, 2: 0.35, 3: 0.20, 4: 0.05}
-
-# Number of distinct lines (0..3). You wanted "can be none" too.
-# (Reasonable distribution, tweak anytime.)
 VENDOR_LINECOUNT_WEIGHTS = {0: 0.10, 1: 0.35, 2: 0.35, 3: 0.20}
-
-# Fallback gp prices (if an item has 0/missing vendor_price in JSON).
-# Chosen to match the pattern you’re already seeing (T2≈5, T3≈11, T5≈45).
 FALLBACK_TIER_GP = {1: 2, 2: 5, 3: 11, 4: 20, 5: 45, 6: 90, 7: 180}
 
 # -----------------------------
 # Helpers
 # -----------------------------
+TIER_SUFFIX_RE = re.compile(r"\s*\(T(\d)\)\s*$", re.IGNORECASE)
+
+def canon_prof(s: str) -> str:
+    return (s or "").strip()
+
+def canon_name(s: str) -> str:
+    return " ".join((s or "").strip().split())
+
+def base_name(s: str) -> str:
+    s = canon_name(s)
+    m = TIER_SUFFIX_RE.search(s)
+    if m:
+        return canon_name(s[:m.start()])
+    return s
+
 def safe_float(x, default=0.0) -> float:
     try:
         if x is None:
@@ -74,50 +97,6 @@ def safe_int(x, default=0) -> int:
     except Exception:
         return int(default)
 
-def canon_prof(s: str) -> str:
-    return (s or "").strip()
-
-def xp_to_next(level: int) -> int:
-    return int(XP_TABLE.get(int(level), 0))
-
-def max_tier_for_level(level: int) -> int:
-    tier = 1
-    for row in TIER_UNLOCKS:
-        if int(level) >= int(row.get("unlocks_at_level", 1)):
-            tier = max(tier, int(row.get("tier", 1)))
-    return tier
-
-def next_unlock_level_for_tier(target_tier: int) -> Optional[int]:
-    """Return the unlock level for a specific tier (exact match)."""
-    lvl = None
-    for row in TIER_UNLOCKS:
-        if int(row.get("tier", 0)) == int(target_tier):
-            lvl = int(row.get("unlocks_at_level", 0))
-            break
-    return lvl if lvl and lvl > 0 else None
-
-def dc_for_target_tier(unlocked_tier: int, target_tier: int) -> Optional[int]:
-    if target_tier <= unlocked_tier:
-        return 10
-    if target_tier == unlocked_tier + 1:
-        return 15
-    if target_tier == unlocked_tier + 2:
-        return 20
-    return None
-
-def tier_color(unlocked: int, target: int) -> str:
-    if target <= unlocked - 1:
-        return "#16a34a"  # green
-    if target == unlocked:
-        return "#111827"  # black-ish
-    if target == unlocked + 1:
-        return "#b45309"  # amber
-    return "#b91c1c"      # red
-
-def tier_badge(unlocked: int, target: int) -> str:
-    col = tier_color(unlocked, target)
-    return f'<span style="color:{col};font-weight:700;">T{target}</span>'
-
 def normalize_weights(weights: Dict[Any, float]) -> Dict[Any, float]:
     s = sum(weights.values()) or 1.0
     return {k: v / s for k, v in weights.items()}
@@ -132,7 +111,48 @@ def weighted_choice(weights: Dict[Any, float]) -> Any:
             return k
     return list(weights.keys())[-1]
 
-# Pricing: tolerate variations in key names
+def xp_to_next(level: int) -> int:
+    return int(XP_TABLE.get(int(level), 0))
+
+def max_tier_for_level(level: int) -> int:
+    tier = 1
+    for row in TIER_UNLOCKS:
+        if int(level) >= int(row.get("unlocks_at_level", 1)):
+            tier = max(tier, int(row.get("tier", 1)))
+    return tier
+
+def next_unlock_level_for_tier(target_tier: int) -> Optional[int]:
+    for row in TIER_UNLOCKS:
+        if int(row.get("tier", 0)) == int(target_tier):
+            lvl = int(row.get("unlocks_at_level", 0))
+            return lvl if lvl > 0 else None
+    return None
+
+def dc_for_target_tier(unlocked_tier: int, target_tier: int) -> Optional[int]:
+    if target_tier <= unlocked_tier:
+        return 10
+    if target_tier == unlocked_tier + 1:
+        return 15
+    if target_tier == unlocked_tier + 2:
+        return 20
+    return None
+
+def tier_color(unlocked: int, target: int) -> str:
+    if target <= unlocked - 1:
+        return "#16a34a"
+    if target == unlocked:
+        return "#111827"
+    if target == unlocked + 1:
+        return "#b45309"
+    return "#b91c1c"
+
+def tier_badge_html(unlocked: int, target: int) -> str:
+    col = tier_color(unlocked, target)
+    return f'<span style="color:{col};font-weight:700;">T{target}</span>'
+
+# -----------------------------
+# Pricing
+# -----------------------------
 PRICE_KEYS_VENDOR = ["vendor_price", "vendorPrice", "vendor_gp", "vendorGp", "vendorCost", "vendor_cost"]
 PRICE_KEYS_BASE = ["base_price", "basePrice", "base_gp", "baseGp", "baseCost", "base_cost", "price", "cost", "gp"]
 
@@ -151,7 +171,6 @@ def effective_unit_price(item: Dict[str, Any]) -> float:
     b = get_price(item, PRICE_KEYS_BASE)
     if b > 0:
         return b
-    # Fallback by tier, so Woodcrafter vendor never shows "—"
     t = safe_int(item.get("tier", 1), 1)
     return float(FALLBACK_TIER_GP.get(t, 0))
 
@@ -163,6 +182,29 @@ ITEM_PROF: Dict[str, str] = {}
 ITEM_DESC: Dict[str, str] = {}
 ITEM_USE: Dict[str, str] = {}
 ITEM_VENDOR: Dict[str, float] = {}
+
+GATHERING_ITEMS_N = []
+for it in GATHERING_ITEMS:
+    it = dict(it)
+    it["name"] = canon_name(it.get("name", ""))
+    it["profession"] = canon_prof(it.get("profession", ""))
+    GATHERING_ITEMS_N.append(it)
+GATHERING_ITEMS = GATHERING_ITEMS_N
+
+RECIPES_N = []
+for r in RECIPES:
+    r = dict(r)
+    r["name"] = canon_name(r.get("name", ""))
+    r["profession"] = canon_prof(r.get("profession", ""))
+    comps = []
+    for c in r.get("components", []) or []:
+        c = dict(c)
+        c["name"] = canon_name(c.get("name", ""))
+        c["qty"] = int(c.get("qty", 1))
+        comps.append(c)
+    r["components"] = comps
+    RECIPES_N.append(r)
+RECIPES = RECIPES_N
 
 for it in GATHERING_ITEMS:
     nm = it.get("name", "")
@@ -183,32 +225,64 @@ for r in RECIPES:
     ITEM_USE.setdefault(nm, r.get("use", "") or "")
     ITEM_VENDOR.setdefault(nm, effective_unit_price(r))
 
-# For each craft prof, what mats does it use?
 CRAFT_PROF_TO_MATS: Dict[str, set] = defaultdict(set)
+CRAFT_PROF_TO_MATS_BASE: Dict[str, set] = defaultdict(set)
+
 for r in RECIPES:
     craft_prof = canon_prof(r.get("profession", "") or "")
     for c in r.get("components", []):
         if c.get("name"):
             CRAFT_PROF_TO_MATS[craft_prof].add(c["name"])
+            CRAFT_PROF_TO_MATS_BASE[craft_prof].add(base_name(c["name"]))
 
-# Gathering items by profession
 gathering_by_prof = defaultdict(list)
 for it in GATHERING_ITEMS:
     gathering_by_prof[canon_prof(it.get("profession", "") or "")].append(it)
 
-# Recipes indices
 recipes_by_prof = defaultdict(list)
 recipes_by_id = {}
 for r in RECIPES:
     prof = canon_prof(r.get("profession", "") or "")
-    recipes_by_prof[prof].append(r)
     rid = r.get("id") or f"{prof}|T{int(r.get('tier', 1))}|{r.get('name','')}"
+    r["id"] = rid
+    recipes_by_prof[prof].append(r)
     recipes_by_id[rid] = r
 
+RECIPE_BASE_INDEX: Dict[Tuple[str, str, str, str], List[Dict[str, Any]]] = defaultdict(list)
+for r in RECIPES:
+    prof = canon_prof(r.get("profession", "") or "")
+    bases = sorted([base_name(c.get("name", "")) for c in r.get("components", [])])
+    if len(bases) == 3:
+        key = (prof, bases[0], bases[1], bases[2])
+        RECIPE_BASE_INDEX[key].append(r)
+for k in list(RECIPE_BASE_INDEX.keys()):
+    RECIPE_BASE_INDEX[k].sort(key=lambda rr: int(rr.get("tier", 1)))
+
 # -----------------------------
-# State
+# Supabase persistence (player_state table)
 # -----------------------------
-def init_state():
+def sb_load_player_state(pname: str) -> Optional[Dict[str, Any]]:
+    if SB is None:
+        return None
+    try:
+        res = SB.table("player_state").select("state").eq("player_name", pname).execute()
+        data = getattr(res, "data", None) or []
+        if not data:
+            return None
+        return data[0].get("state")
+    except Exception:
+        return None
+
+def sb_save_player_state(pname: str, state: Dict[str, Any]) -> bool:
+    if SB is None:
+        return False
+    try:
+        SB.table("player_state").upsert({"player_name": pname, "state": state}).execute()
+        return True
+    except Exception:
+        return False
+
+def init_session_state():
     if "players" not in st.session_state:
         st.session_state.players = copy.deepcopy(PLAYERS_DEFAULT)
     if "inventories" not in st.session_state:
@@ -220,7 +294,50 @@ def init_state():
     if "gather_results" not in st.session_state:
         st.session_state.gather_results = {}
 
-init_state()
+init_session_state()
+
+def get_player(pname: str) -> Dict[str, Any]:
+    for p in st.session_state.players:
+        if p.get("name") == pname:
+            return p
+    raise KeyError(pname)
+
+def sb_bootstrap():
+    if SB is None:
+        return
+    for p in st.session_state.players:
+        pname = p.get("name")
+        if not pname:
+            continue
+        saved = sb_load_player_state(pname)
+        if not saved:
+            init_state = {
+                "player": {"skills": p.get("skills", {}), "known_recipes": p.get("known_recipes", [])},
+                "inventory": st.session_state.inventories.get(pname, {}),
+            }
+            sb_save_player_state(pname, init_state)
+            continue
+        inv = saved.get("inventory", {})
+        if isinstance(inv, dict):
+            st.session_state.inventories[pname] = {canon_name(k): int(v) for k, v in inv.items() if int(v) > 0}
+        pdata = saved.get("player", {})
+        if isinstance(pdata, dict):
+            if "skills" in pdata:
+                p["skills"] = pdata.get("skills", p.get("skills", {}))
+            if "known_recipes" in pdata:
+                p["known_recipes"] = pdata.get("known_recipes", p.get("known_recipes", []))
+
+def save_player_now(pname: str):
+    if SB is None:
+        return
+    pl = get_player(pname)
+    state = {
+        "player": {"skills": pl.get("skills", {}), "known_recipes": pl.get("known_recipes", [])},
+        "inventory": st.session_state.inventories.get(pname, {}),
+    }
+    sb_save_player_state(pname, state)
+
+sb_bootstrap()
 
 # -----------------------------
 # Undo
@@ -248,18 +365,13 @@ def restore_from_undo():
         st.session_state.gather_results.pop(pname, None)
     else:
         st.session_state.gather_results[pname] = last["prev_gather"]
+    save_player_now(pname)
     st.success(f"Undid: {last['label']} ({pname})")
     st.rerun()
 
 # -----------------------------
 # Core mutations
 # -----------------------------
-def get_player(pname: str) -> Dict[str, Any]:
-    for p in st.session_state.players:
-        if p.get("name") == pname:
-            return p
-    raise KeyError(pname)
-
 def apply_xp_delta(player: Dict[str, Any], skill: str, delta: int):
     skills = player.setdefault("skills", {})
     data = skills.setdefault(skill, {"level": 1, "xp": 0})
@@ -281,37 +393,36 @@ def apply_xp_delta(player: Dict[str, Any], skill: str, delta: int):
     data["xp"] = xp
 
 def add_item(inv: Dict[str, int], item_name: str, qty: int = 1):
+    item_name = canon_name(item_name)
     inv[item_name] = inv.get(item_name, 0) + int(qty)
     if inv[item_name] <= 0:
         inv.pop(item_name, None)
 
 def remove_item(inv: Dict[str, int], item_name: str, qty: int = 1):
+    item_name = canon_name(item_name)
     inv[item_name] = inv.get(item_name, 0) - int(qty)
     if inv[item_name] <= 0:
         inv.pop(item_name, None)
 
 def can_craft(inv: Dict[str, int], recipe: Dict[str, Any]) -> bool:
     for c in recipe.get("components", []):
-        nm = c.get("name", "")
+        nm = canon_name(c.get("name", ""))
         need = int(c.get("qty", 1))
         if inv.get(nm, 0) < need:
             return False
     return True
 
 def crafting_xp_from_components(recipe: Dict[str, Any]) -> int:
-    tiers = [int(ITEM_TIER.get(c.get("name", ""), 1)) for c in recipe.get("components", [])]
+    tiers = [int(ITEM_TIER.get(canon_name(c.get("name", "")), 1)) for c in recipe.get("components", [])]
     return max(tiers) if tiers else int(recipe.get("tier", 1))
 
 def gathering_xp_for_item(item_name: str) -> int:
-    return int(ITEM_TIER.get(item_name, 1))
+    return int(ITEM_TIER.get(canon_name(item_name), 1))
 
 # -----------------------------
-# Automated Gathering (roll input)
+# Automated Gathering
 # -----------------------------
 def gathered_tier_from_roll(unlocked_tier: int, roll_total: int) -> Optional[int]:
-    # Your rules:
-    # - If T1 and roll < 10 => FAIL
-    # - Else: 20+ => T+2, 15+ => T+1, 10+ => T, <10 => T-1
     if unlocked_tier == 1 and roll_total < 10:
         return None
     if roll_total >= 20:
@@ -352,22 +463,18 @@ def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> 
     skill_level = int(skills.get(chosen_prof, {}).get("level", 1))
     unlocked = max_tier_for_level(skill_level)
 
-    # How many distinct items this visit?
     n_lines = int(weighted_choice(VENDOR_LINECOUNT_WEIGHTS))
     n_lines = max(0, min(VENDOR_MAX_LINES, n_lines))
     if n_lines == 0:
         return []
 
-    # Candidate pool:
     if chosen_prof in gathering_by_prof:
         candidates = list(gathering_by_prof[chosen_prof])
     else:
         mats = CRAFT_PROF_TO_MATS.get(chosen_prof, set())
-        candidates = [it for it in GATHERING_ITEMS if it.get("name") in mats]
+        candidates = [it for it in GATHERING_ITEMS if canon_name(it.get("name", "")) in mats]
 
-    # Only allow up to T+2 (hard clamp)
     max_allowed_tier = min(7, unlocked + 2)
-
     by_tier = defaultdict(list)
     for it in candidates:
         t = int(it.get("tier", 1))
@@ -379,13 +486,10 @@ def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> 
     attempts = 0
     while len(lines) < n_lines and attempts < 120:
         attempts += 1
-        target_tier = choose_vendor_tier(unlocked)
-        if target_tier > max_allowed_tier:
-            target_tier = max_allowed_tier
+        target_tier = min(choose_vendor_tier(unlocked), max_allowed_tier)
 
         pool = by_tier.get(target_tier, [])
         if not pool:
-            # fallback downwards
             tt = target_tier
             while tt >= 1 and not by_tier.get(tt):
                 tt -= 1
@@ -395,7 +499,7 @@ def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> 
             target_tier = tt
 
         it = random.choice(pool)
-        nm = it.get("name", "")
+        nm = canon_name(it.get("name", ""))
         if not nm:
             continue
         if nm in used_names and len(pool) > 1:
@@ -418,11 +522,12 @@ def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> 
     return lines
 
 # -----------------------------
-# Discovery (3 items from inventory)
+# Discovery (3 items, consumed always)
 # -----------------------------
 def validate_discovery_selection(inv: Dict[str, int], picks: List[str]) -> Tuple[bool, str]:
     counts = defaultdict(int)
     for p in picks:
+        p = canon_name(p)
         if not p:
             return False, "Pick 3 items."
         counts[p] += 1
@@ -431,39 +536,45 @@ def validate_discovery_selection(inv: Dict[str, int], picks: List[str]) -> Tuple
             return False, f"You selected {nm} {need}x but only have {inv.get(nm, 0)}."
     return True, ""
 
-def best_partial_match(player: Dict[str, Any], craft_prof: str, chosen_items: List[str]) -> Tuple[int, Optional[str]]:
+def consume_selected(inv: Dict[str, int], picks: List[str]):
+    counts = defaultdict(int)
+    for p in picks:
+        counts[canon_name(p)] += 1
+    for nm, q in counts.items():
+        remove_item(inv, nm, q)
+
+def match_recipe_mixed_tiers(craft_prof: str, chosen_items: List[str], unlocked_tier: int) -> Optional[Dict[str, Any]]:
     craft_prof = canon_prof(craft_prof)
-    known = set(player.get("known_recipes", []))
-    chosen = [x for x in chosen_items if x]
+    chosen = [canon_name(x) for x in chosen_items if x]
     if len(chosen) != 3:
-        return (0, None)
-    chosen_set = set(chosen)
+        return None
 
-    lvl = int(player.get("skills", {}).get(craft_prof, {}).get("level", 1))
-    unlocked = max_tier_for_level(lvl)
+    chosen_bases = sorted([base_name(x) for x in chosen])
+    key = (craft_prof, chosen_bases[0], chosen_bases[1], chosen_bases[2])
+    candidates = RECIPE_BASE_INDEX.get(key, [])
+    if not candidates:
+        return None
 
-    best = 0
-    best_id = None
-    for r in recipes_by_prof.get(craft_prof, []):
-        rid = r.get("id")
-        if rid in known:
-            continue
-        t = int(r.get("tier", 1))
-        if t > unlocked + 2:
-            continue
-        comps = [c.get("name", "") for c in r.get("components", [])]
-        overlap = len(set(comps) & chosen_set)
-        if overlap > best:
-            best = overlap
-            best_id = rid
-        if best == 3:
-            break
-    return best, best_id
+    max_visible = min(7, unlocked_tier + 2)
+    candidates = [r for r in candidates if int(r.get("tier", 1)) <= max_visible]
+    if not candidates:
+        return None
+
+    chosen_tiers = [int(ITEM_TIER.get(x, 1)) for x in chosen]
+    tmin = min(chosen_tiers) if chosen_tiers else 1
+
+    preferred = [r for r in candidates if int(r.get("tier", 1)) <= tmin]
+    if preferred:
+        return preferred[0]
+    return candidates[0]
 
 # -----------------------------
 # UI
 # -----------------------------
 st.title("🛠 D&D Crafting Simulator")
+
+if SB is None:
+    st.warning("Supabase not configured (or supabase package missing). App will NOT persist after refresh.")
 
 top1, top2 = st.columns([1, 6])
 with top1:
@@ -474,10 +585,6 @@ with top2:
         f"Last: {st.session_state.undo_stack[-1]['label']} ({st.session_state.undo_stack[-1]['player']})"
         if st.session_state.undo_stack else "No actions to undo yet."
     )
-
-if not st.session_state.players:
-    st.info("No players found. Add them in data/players.json.")
-    st.stop()
 
 tabs = st.tabs([p["name"] for p in st.session_state.players])
 
@@ -492,7 +599,7 @@ for idx, player in enumerate(st.session_state.players):
     with tabs[idx]:
         st.subheader(f"👤 {pname}")
 
-        # ---- Skills with tier + next unlock level ----
+        # ---- Skills ----
         st.markdown("### Skills")
         cols = st.columns(2)
         for i, s in enumerate(list(skills.keys())):
@@ -518,11 +625,13 @@ for idx, player in enumerate(st.session_state.players):
                     if st.button("−1 XP", key=f"{pname}-{s}-xpminus"):
                         push_undo(pname, f"XP −1 ({s})")
                         apply_xp_delta(get_player(pname), s, -1)
+                        save_player_now(pname)
                         st.rerun()
                 with b2:
                     if st.button("+1 XP", key=f"{pname}-{s}-xpplus"):
                         push_undo(pname, f"XP +1 ({s})")
                         apply_xp_delta(get_player(pname), s, +1)
+                        save_player_now(pname)
                         st.rerun()
 
         st.divider()
@@ -541,12 +650,13 @@ for idx, player in enumerate(st.session_state.players):
 
             rows = []
             for nm, qty in inv.items():
+                nm = canon_name(nm)
                 t = int(ITEM_TIER.get(nm, 1))
                 if tier_filter != "All" and t != int(tier_filter[1:]):
                     continue
                 if prof_filter and prof_filter != "All" and ITEM_PROF.get(nm, "") != prof_filter:
                     continue
-                vend = float(ITEM_VENDOR.get(nm, 0) or 0)
+                vend = float(ITEM_VENDOR.get(nm, FALLBACK_TIER_GP.get(t, 0)) or 0)
                 sell = math.floor(vend * SELL_RATE)
                 rows.append((nm, t, qty, sell))
 
@@ -563,7 +673,7 @@ for idx, player in enumerate(st.session_state.players):
                 for nm, t, qty, sell in rows:
                     left, mid, right = st.columns([5, 2, 2])
                     with left:
-                        st.write(f"**{nm}** ({tier_badge(99, t)})", unsafe_allow_html=True)
+                        st.write(f"**{nm}** ({tier_badge_html(99, t)})", unsafe_allow_html=True)
                         if ITEM_DESC.get(nm):
                             st.caption(ITEM_DESC[nm])
                     with mid:
@@ -575,14 +685,16 @@ for idx, player in enumerate(st.session_state.players):
                             if st.button("−", key=f"{pname}-inv-{nm}-minus"):
                                 push_undo(pname, f"Inventory −1 ({nm})")
                                 remove_item(inv, nm, 1)
+                                save_player_now(pname)
                                 st.rerun()
                         with bplus:
                             if st.button("+", key=f"{pname}-inv-{nm}-plus"):
                                 push_undo(pname, f"Inventory +1 ({nm})")
                                 add_item(inv, nm, 1)
+                                save_player_now(pname)
                                 st.rerun()
 
-        # ---- Gathering (roll-based; empty until button click) ----
+        # ---- Gathering ----
         with st.expander("⛏️ Gathering", expanded=False):
             if not gathering_prof:
                 st.caption("No gathering profession.")
@@ -591,11 +703,7 @@ for idx, player in enumerate(st.session_state.players):
                 unlocked = max_tier_for_level(skill_lvl)
 
                 st.markdown("#### Automated gathering (enter your in-game roll)")
-                roll_total = st.number_input(
-                    "Your total roll (d20 + modifiers)",
-                    min_value=0, max_value=60, value=10, step=1,
-                    key=f"{pname}-g-roll"
-                )
+                roll_total = st.number_input("Your total roll (d20 + modifiers)", min_value=0, max_value=60, value=10, step=1, key=f"{pname}-g-roll")
 
                 if st.button("Roll gathering", key=f"{pname}-g-roll-btn"):
                     push_undo(pname, "Gathering roll")
@@ -604,11 +712,7 @@ for idx, player in enumerate(st.session_state.players):
                         st.session_state.gather_results[pname] = {"failed": True}
                     else:
                         found = choose_random_gather_item(gathering_prof, target_tier)
-                        st.session_state.gather_results[pname] = {
-                            "failed": False,
-                            "tier": int(target_tier),
-                            "item": found.get("name", "") if found else ""
-                        }
+                        st.session_state.gather_results[pname] = {"failed": False, "tier": int(target_tier), "item": found.get("name", "") if found else ""}
                     st.rerun()
 
                 result = st.session_state.gather_results.get(pname)
@@ -619,15 +723,15 @@ for idx, player in enumerate(st.session_state.players):
                         st.error("Gathering failed! You didn’t find anything this time.")
                     else:
                         t = int(result.get("tier", 1))
-                        item_name = result.get("item", "")
+                        item_name = canon_name(result.get("item", ""))
                         dc = dc_for_target_tier(unlocked, t)
-                        st.markdown(f"Result tier: {tier_badge(unlocked, t)} • DC {dc if dc else '—'}", unsafe_allow_html=True)
+                        st.markdown(f"Result tier: {tier_badge_html(unlocked, t)} • DC {dc if dc else '—'}", unsafe_allow_html=True)
 
                         if not item_name:
                             st.warning("No item found for that tier (check gathering_items.json).")
                         else:
                             xp_gain = gathering_xp_for_item(item_name)
-                            st.write(f"**You found:** {item_name} ({tier_badge(unlocked, t)})", unsafe_allow_html=True)
+                            st.write(f"**You found:** {item_name} ({tier_badge_html(unlocked, t)})", unsafe_allow_html=True)
                             if ITEM_DESC.get(item_name):
                                 st.caption(ITEM_DESC[item_name])
                             if ITEM_USE.get(item_name):
@@ -639,6 +743,7 @@ for idx, player in enumerate(st.session_state.players):
                                 add_item(inv, item_name, 1)
                                 apply_xp_delta(get_player(pname), gathering_prof, xp_gain)
                                 st.session_state.gather_results.pop(pname, None)
+                                save_player_now(pname)
                                 st.rerun()
 
         # ---- Crafting ----
@@ -651,18 +756,23 @@ for idx, player in enumerate(st.session_state.players):
                 unlocked = max_tier_for_level(skill_lvl)
 
                 known_ids = set(player.get("known_recipes", []))
-                known_recipes = [
-                    recipes_by_id[rid] for rid in known_ids
-                    if rid in recipes_by_id and canon_prof(recipes_by_id[rid].get("profession", "")) == craft_prof
-                ]
+                known_recipes = [recipes_by_id[rid] for rid in known_ids if rid in recipes_by_id and canon_prof(recipes_by_id[rid].get("profession", "")) == craft_prof]
                 known_recipes = [r for r in known_recipes if int(r.get("tier", 1)) <= unlocked + 2]
 
                 st.markdown("#### Discover recipes (3 items from your inventory)")
-                mats_allowed = CRAFT_PROF_TO_MATS.get(craft_prof, set())
-                inv_options = sorted([nm for nm in inv.keys() if nm in mats_allowed], key=lambda x: x.lower())
+                mats_allowed_exact = CRAFT_PROF_TO_MATS.get(craft_prof, set())
+                mats_allowed_base = CRAFT_PROF_TO_MATS_BASE.get(craft_prof, set())
+
+                inv_options = []
+                for nm in inv.keys():
+                    cn = canon_name(nm)
+                    if cn in mats_allowed_exact or base_name(cn) in mats_allowed_base:
+                        inv_options.append(cn)
+                inv_options = sorted(set(inv_options), key=lambda x: x.lower())
 
                 if not inv_options:
                     st.caption("You don’t have any valid crafting components in your inventory for this profession yet.")
+                    st.caption("If you think you should: check that component names in recipes.json match gathering_items.json exactly (including (Tn)).")
                 else:
                     d1, d2, d3 = st.columns(3)
                     m1 = d1.selectbox("Item 1", [""] + inv_options, key=f"{pname}-disc-1")
@@ -675,50 +785,57 @@ for idx, player in enumerate(st.session_state.players):
                         if not ok:
                             st.error(msg)
                         else:
-                            overlap, rid = best_partial_match(get_player(pname), craft_prof, chosen)
-                            if overlap == 3 and rid:
-                                push_undo(pname, f"Discovered recipe ({craft_prof})")
-                                get_player(pname).setdefault("known_recipes", [])
-                                if rid not in get_player(pname)["known_recipes"]:
-                                    get_player(pname)["known_recipes"].append(rid)
-                                st.success("Success! You discovered a recipe. It’s now visible in your recipe list.")
-                                st.rerun()
-                            elif overlap == 2:
-                                st.warning("So close! 2 of 3 components match an undiscovered recipe for this profession.")
-                            elif overlap == 1:
-                                st.info("You feel a faint resonance, but it’s not quite right. (1/3 match)")
-                            else:
+                            push_undo(pname, f"Discovery attempt ({craft_prof})")
+                            consume_selected(inv, chosen)
+
+                            recipe = match_recipe_mixed_tiers(craft_prof, chosen, unlocked)
+                            if recipe is None:
                                 st.error("Nope. That combination doesn’t seem to lead anywhere.")
+                                save_player_now(pname)
+                                st.rerun()
+
+                            rid = recipe.get("id")
+                            player.setdefault("known_recipes", [])
+                            if rid and rid not in player["known_recipes"]:
+                                player["known_recipes"].append(rid)
+
+                            out_name = canon_name(recipe.get("name", ""))
+                            add_item(inv, out_name, 1)
+
+                            xp_gain = crafting_xp_from_components(recipe)
+                            apply_xp_delta(get_player(pname), craft_prof, xp_gain)
+
+                            st.success(f"Success! You created **{out_name}** and learned the recipe.")
+                            save_player_now(pname)
+                            st.rerun()
 
                 st.divider()
                 st.markdown(f"#### Known recipes (visible up to T{unlocked + 2})")
+
                 if not known_recipes:
                     st.caption("You haven’t learned any recipes yet.")
                 else:
-                    for t in range(1, 8):
-                        if t > unlocked + 2:
-                            continue
+                    for t in range(1, min(8, unlocked + 3)):
                         tier_recipes = [r for r in known_recipes if int(r.get("tier", 1)) == t]
                         if not tier_recipes:
                             continue
-
-                        header = f"{tier_badge(unlocked, t)} recipes"
-                        with st.expander(header, expanded=(t == unlocked)):
+                        with st.expander(f"T{t} recipes", expanded=(t == unlocked)):
+                            st.markdown(f"**Tier:** {tier_badge_html(unlocked, t)}", unsafe_allow_html=True)
                             tier_recipes.sort(key=lambda x: (x.get("name", "") or "").lower())
                             for r in tier_recipes:
-                                nm = r.get("name", "")
+                                nm = canon_name(r.get("name", ""))
                                 can = can_craft(inv, r)
                                 xp_gain = crafting_xp_from_components(r)
                                 dc = dc_for_target_tier(unlocked, t)
 
-                                st.write(f"**{nm}** ({tier_badge(unlocked, t)})", unsafe_allow_html=True)
+                                st.write(f"**{nm}** ({tier_badge_html(unlocked, t)})", unsafe_allow_html=True)
                                 if r.get("description"):
                                     st.caption(r["description"])
                                 st.caption(f"DC {dc if dc else '—'} • XP if crafted: **{xp_gain}**")
 
                                 with st.expander("Show recipe details", expanded=False):
                                     for c in r.get("components", []):
-                                        cname = c.get("name", "")
+                                        cname = canon_name(c.get("name", ""))
                                         need = int(c.get("qty", 1))
                                         have = int(inv.get(cname, 0))
                                         st.write(f"- {cname}: **{have} / {need}** {'✅' if have >= need else '❌'}")
@@ -733,12 +850,13 @@ for idx, player in enumerate(st.session_state.players):
                                             remove_item(inv, c.get("name", ""), int(c.get("qty", 1)))
                                         add_item(inv, nm, 1)
                                         apply_xp_delta(get_player(pname), craft_prof, xp_gain)
+                                        save_player_now(pname)
                                         st.rerun()
                                 with right:
                                     if not can:
                                         missing = []
                                         for c in r.get("components", []):
-                                            cname = c.get("name", "")
+                                            cname = canon_name(c.get("name", ""))
                                             need = int(c.get("qty", 1))
                                             have = int(inv.get(cname, 0))
                                             if have < need:
@@ -776,7 +894,7 @@ for idx, player in enumerate(st.session_state.players):
                     if not lines:
                         st.info("This vendor has nothing useful right now.")
                     for i, line in enumerate(lines):
-                        nm = line.get("name", "")
+                        nm = canon_name(line.get("name", ""))
                         t = safe_int(line.get("tier", 1), 1)
                         qty = safe_int(line.get("qty", 1), 1)
                         unit = safe_float(line.get("unit_price", 0), 0.0)
@@ -786,7 +904,7 @@ for idx, player in enumerate(st.session_state.players):
                         total_disp = f"{safe_int(total)} gp" if total > 0 else "—"
 
                         st.write(
-                            f"**{nm}** ({tier_badge(line.get('unlocked_tier', 99), t)}) • "
+                            f"**{nm}** ({tier_badge_html(line.get('unlocked_tier', 99), t)}) • "
                             f"Qty: **{qty}** • Unit: **{unit_disp}** • Total: **{total_disp}**",
                             unsafe_allow_html=True
                         )
@@ -795,6 +913,7 @@ for idx, player in enumerate(st.session_state.players):
                         with b1:
                             if st.button("Buy", key=f"{pname}-vendor-buy-{i}-{nm}"):
                                 push_undo(pname, f"Vendor buy {nm} x{qty}")
-                                add_item(inv, nm, qty)  # buying gives NO XP
+                                add_item(inv, nm, qty)
+                                save_player_now(pname)
                                 st.rerun()
                         st.divider()
