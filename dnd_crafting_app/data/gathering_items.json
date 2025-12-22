@@ -495,8 +495,8 @@
     "name": "Ridgehide Hide (T1)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -505,8 +505,8 @@
     "name": "Razorfang Teeth (T1)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -515,8 +515,8 @@
     "name": "Hookclaw Claw (T1)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -525,8 +525,8 @@
     "name": "Wardenbone Bone (T1)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -535,8 +535,8 @@
     "name": "Rich Organ (T1)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -545,8 +545,8 @@
     "name": "Predator Heart (T1)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.5,
+    "vendor_price": 3.0,
     "rarity_type": "Special"
   },
   {
@@ -555,8 +555,8 @@
     "name": "Viper Venom Sac (T1)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.5,
+    "vendor_price": 3.0,
     "rarity_type": "Special"
   },
   {
@@ -565,8 +565,8 @@
     "name": "Ridgehide Hide (T2)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -575,8 +575,8 @@
     "name": "Razorfang Teeth (T2)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -585,8 +585,8 @@
     "name": "Hookclaw Claw (T2)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -595,8 +595,8 @@
     "name": "Wardenbone Bone (T2)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -605,8 +605,8 @@
     "name": "Rich Organ (T2)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -615,8 +615,8 @@
     "name": "Predator Heart (T2)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 3.0,
+    "vendor_price": 7.5,
     "rarity_type": "Special"
   },
   {
@@ -625,8 +625,8 @@
     "name": "Viper Venom Sac (T2)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 3.0,
+    "vendor_price": 7.5,
     "rarity_type": "Special"
   },
   {
@@ -635,8 +635,8 @@
     "name": "Ridgehide Hide (T3)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -645,8 +645,8 @@
     "name": "Razorfang Teeth (T3)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -655,8 +655,8 @@
     "name": "Hookclaw Claw (T3)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -665,8 +665,8 @@
     "name": "Wardenbone Bone (T3)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -675,8 +675,8 @@
     "name": "Rich Organ (T3)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -685,8 +685,8 @@
     "name": "Predator Heart (T3)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 7.5,
+    "vendor_price": 16.5,
     "rarity_type": "Special"
   },
   {
@@ -695,8 +695,8 @@
     "name": "Viper Venom Sac (T3)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 7.5,
+    "vendor_price": 16.5,
     "rarity_type": "Special"
   },
   {
@@ -705,8 +705,8 @@
     "name": "Ridgehide Hide (T4)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -715,8 +715,8 @@
     "name": "Razorfang Teeth (T4)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -725,8 +725,8 @@
     "name": "Hookclaw Claw (T4)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -735,8 +735,8 @@
     "name": "Wardenbone Bone (T4)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -745,8 +745,8 @@
     "name": "Rich Organ (T4)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -755,8 +755,8 @@
     "name": "Predator Heart (T4)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 15.0,
+    "vendor_price": 30.0,
     "rarity_type": "Special"
   },
   {
@@ -765,8 +765,8 @@
     "name": "Viper Venom Sac (T4)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 15.0,
+    "vendor_price": 30.0,
     "rarity_type": "Special"
   },
   {
@@ -775,8 +775,8 @@
     "name": "Ridgehide Hide (T5)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -785,8 +785,8 @@
     "name": "Razorfang Teeth (T5)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -795,8 +795,8 @@
     "name": "Hookclaw Claw (T5)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -805,8 +805,8 @@
     "name": "Wardenbone Bone (T5)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -815,8 +815,8 @@
     "name": "Rich Organ (T5)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -825,8 +825,8 @@
     "name": "Predator Heart (T5)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 30.0,
+    "vendor_price": 67.5,
     "rarity_type": "Special"
   },
   {
@@ -835,8 +835,8 @@
     "name": "Viper Venom Sac (T5)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 30.0,
+    "vendor_price": 67.5,
     "rarity_type": "Special"
   },
   {
@@ -845,8 +845,8 @@
     "name": "Ridgehide Hide (T6)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -855,8 +855,8 @@
     "name": "Razorfang Teeth (T6)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -865,8 +865,8 @@
     "name": "Hookclaw Claw (T6)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -875,8 +875,8 @@
     "name": "Wardenbone Bone (T6)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -885,8 +885,8 @@
     "name": "Rich Organ (T6)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -895,8 +895,8 @@
     "name": "Predator Heart (T6)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 67.5,
+    "vendor_price": 135.0,
     "rarity_type": "Special"
   },
   {
@@ -905,8 +905,8 @@
     "name": "Viper Venom Sac (T6)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 67.5,
+    "vendor_price": 135.0,
     "rarity_type": "Special"
   },
   {
@@ -915,8 +915,8 @@
     "name": "Ridgehide Hide (T7)",
     "description": "Tough hide suitable for leatherwork and padding.",
     "use": "Armor lining, straps, clothing.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -925,8 +925,8 @@
     "name": "Razorfang Teeth (T7)",
     "description": "Sharp teeth kept for weapon fittings and charms.",
     "use": "Charms, blades, intimidation talismans.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -935,8 +935,8 @@
     "name": "Hookclaw Claw (T7)",
     "description": "Curved claw used for finesse tools and weapons.",
     "use": "Daggers, hooks, precise components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -945,8 +945,8 @@
     "name": "Wardenbone Bone (T7)",
     "description": "Dense bone used for reinforcement and tools.",
     "use": "Handles, frames, hardened parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -955,8 +955,8 @@
     "name": "Rich Organ (T7)",
     "description": "Fresh organ with potent biochemical value.",
     "use": "Cooking stock, alchemy reagents, toxins.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -965,8 +965,8 @@
     "name": "Predator Heart (T7)",
     "description": "A vital heart still warm with life essence.",
     "use": "Powerful brews, rituals, rare enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 135.0,
+    "vendor_price": 270.0,
     "rarity_type": "Special"
   },
   {
@@ -975,8 +975,8 @@
     "name": "Viper Venom Sac (T7)",
     "description": "A volatile sac containing concentrated venom.",
     "use": "Poisons, special ammo, risky experiments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 135.0,
+    "vendor_price": 270.0,
     "rarity_type": "Special"
   },
   {
@@ -985,8 +985,8 @@
     "name": "Deepvein Ore (T1)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -995,8 +995,8 @@
     "name": "Smelter Ingot (T1)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1005,8 +1005,8 @@
     "name": "Starcut Gem (T1)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1015,8 +1015,8 @@
     "name": "Lumen Crystal (T1)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1025,8 +1025,8 @@
     "name": "Forge Flux (T1)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1035,8 +1035,8 @@
     "name": "Primal Shard (T1)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.5,
+    "vendor_price": 3.0,
     "rarity_type": "Special"
   },
   {
@@ -1045,8 +1045,8 @@
     "name": "Mythic Alloy Fragment (T1)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.5,
+    "vendor_price": 3.0,
     "rarity_type": "Special"
   },
   {
@@ -1055,8 +1055,8 @@
     "name": "Deepvein Ore (T2)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1065,8 +1065,8 @@
     "name": "Smelter Ingot (T2)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1075,8 +1075,8 @@
     "name": "Starcut Gem (T2)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1085,8 +1085,8 @@
     "name": "Lumen Crystal (T2)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1095,8 +1095,8 @@
     "name": "Forge Flux (T2)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1105,8 +1105,8 @@
     "name": "Primal Shard (T2)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 3.0,
+    "vendor_price": 7.5,
     "rarity_type": "Special"
   },
   {
@@ -1115,8 +1115,8 @@
     "name": "Mythic Alloy Fragment (T2)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 3.0,
+    "vendor_price": 7.5,
     "rarity_type": "Special"
   },
   {
@@ -1125,8 +1125,8 @@
     "name": "Deepvein Ore (T3)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1135,8 +1135,8 @@
     "name": "Smelter Ingot (T3)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1145,8 +1145,8 @@
     "name": "Starcut Gem (T3)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1155,8 +1155,8 @@
     "name": "Lumen Crystal (T3)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1165,8 +1165,8 @@
     "name": "Forge Flux (T3)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1175,8 +1175,8 @@
     "name": "Primal Shard (T3)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 7.5,
+    "vendor_price": 16.5,
     "rarity_type": "Special"
   },
   {
@@ -1185,8 +1185,8 @@
     "name": "Mythic Alloy Fragment (T3)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 7.5,
+    "vendor_price": 16.5,
     "rarity_type": "Special"
   },
   {
@@ -1195,8 +1195,8 @@
     "name": "Deepvein Ore (T4)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1205,8 +1205,8 @@
     "name": "Smelter Ingot (T4)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1215,8 +1215,8 @@
     "name": "Starcut Gem (T4)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1225,8 +1225,8 @@
     "name": "Lumen Crystal (T4)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1235,8 +1235,8 @@
     "name": "Forge Flux (T4)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1245,8 +1245,8 @@
     "name": "Primal Shard (T4)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 15.0,
+    "vendor_price": 30.0,
     "rarity_type": "Special"
   },
   {
@@ -1255,8 +1255,8 @@
     "name": "Mythic Alloy Fragment (T4)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 15.0,
+    "vendor_price": 30.0,
     "rarity_type": "Special"
   },
   {
@@ -1265,8 +1265,8 @@
     "name": "Deepvein Ore (T5)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1275,8 +1275,8 @@
     "name": "Smelter Ingot (T5)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1285,8 +1285,8 @@
     "name": "Starcut Gem (T5)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1295,8 +1295,8 @@
     "name": "Lumen Crystal (T5)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1305,8 +1305,8 @@
     "name": "Forge Flux (T5)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1315,8 +1315,8 @@
     "name": "Primal Shard (T5)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 30.0,
+    "vendor_price": 67.5,
     "rarity_type": "Special"
   },
   {
@@ -1325,8 +1325,8 @@
     "name": "Mythic Alloy Fragment (T5)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 30.0,
+    "vendor_price": 67.5,
     "rarity_type": "Special"
   },
   {
@@ -1335,8 +1335,8 @@
     "name": "Deepvein Ore (T6)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1345,8 +1345,8 @@
     "name": "Smelter Ingot (T6)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1355,8 +1355,8 @@
     "name": "Starcut Gem (T6)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1365,8 +1365,8 @@
     "name": "Lumen Crystal (T6)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1375,8 +1375,8 @@
     "name": "Forge Flux (T6)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1385,8 +1385,8 @@
     "name": "Primal Shard (T6)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 67.5,
+    "vendor_price": 135.0,
     "rarity_type": "Special"
   },
   {
@@ -1395,8 +1395,8 @@
     "name": "Mythic Alloy Fragment (T6)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 67.5,
+    "vendor_price": 135.0,
     "rarity_type": "Special"
   },
   {
@@ -1405,8 +1405,8 @@
     "name": "Deepvein Ore (T7)",
     "description": "Raw ore pulled from deep seams.",
     "use": "Primary metal source for crafting.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1415,8 +1415,8 @@
     "name": "Smelter Ingot (T7)",
     "description": "A refined metal ingot ready for forging.",
     "use": "Weapons, armor, metal fittings.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1425,8 +1425,8 @@
     "name": "Starcut Gem (T7)",
     "description": "A hard gemstone with excellent focus potential.",
     "use": "Jewelry, foci, enchanting components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1435,8 +1435,8 @@
     "name": "Lumen Crystal (T7)",
     "description": "A luminous crystal that conducts magic.",
     "use": "Spell storage, enchanting, arcane devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1445,8 +1445,8 @@
     "name": "Forge Flux (T7)",
     "description": "A reactive reagent used in smelting and binding.",
     "use": "Refining metals, stabilizing alloys.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1455,8 +1455,8 @@
     "name": "Primal Shard (T7)",
     "description": "An unstable shard pulsing with raw power.",
     "use": "High-tier enchantments, artifact parts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 135.0,
+    "vendor_price": 270.0,
     "rarity_type": "Special"
   },
   {
@@ -1465,8 +1465,8 @@
     "name": "Mythic Alloy Fragment (T7)",
     "description": "A rare fragment of ancient mythic alloy.",
     "use": "Legendary crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 135.0,
+    "vendor_price": 270.0,
     "rarity_type": "Special"
   },
   {
@@ -1475,8 +1475,8 @@
     "name": "Spell Dust (T1)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1485,8 +1485,8 @@
     "name": "Arcane Essence (T1)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1495,8 +1495,8 @@
     "name": "Resonant Shard (T1)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1505,8 +1505,8 @@
     "name": "Runic Rune Fragment (T1)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1515,8 +1515,8 @@
     "name": "Aether Catalyst (T1)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.0,
+    "vendor_price": 2.0,
     "rarity_type": "Standard"
   },
   {
@@ -1525,8 +1525,8 @@
     "name": "Ethereal Core (T1)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.5,
+    "vendor_price": 3.0,
     "rarity_type": "Special"
   },
   {
@@ -1535,8 +1535,8 @@
     "name": "Void Residue (T1)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 1.5,
+    "vendor_price": 3.0,
     "rarity_type": "Special"
   },
   {
@@ -1545,8 +1545,8 @@
     "name": "Spell Dust (T2)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1555,8 +1555,8 @@
     "name": "Arcane Essence (T2)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1565,8 +1565,8 @@
     "name": "Resonant Shard (T2)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1575,8 +1575,8 @@
     "name": "Runic Rune Fragment (T2)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1585,8 +1585,8 @@
     "name": "Aether Catalyst (T2)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 2.0,
+    "vendor_price": 5.0,
     "rarity_type": "Standard"
   },
   {
@@ -1595,8 +1595,8 @@
     "name": "Ethereal Core (T2)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 3.0,
+    "vendor_price": 7.5,
     "rarity_type": "Special"
   },
   {
@@ -1605,8 +1605,8 @@
     "name": "Void Residue (T2)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 3.0,
+    "vendor_price": 7.5,
     "rarity_type": "Special"
   },
   {
@@ -1615,8 +1615,8 @@
     "name": "Spell Dust (T3)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1625,8 +1625,8 @@
     "name": "Arcane Essence (T3)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1635,8 +1635,8 @@
     "name": "Resonant Shard (T3)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1645,8 +1645,8 @@
     "name": "Runic Rune Fragment (T3)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1655,8 +1655,8 @@
     "name": "Aether Catalyst (T3)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 5.0,
+    "vendor_price": 11.0,
     "rarity_type": "Standard"
   },
   {
@@ -1665,8 +1665,8 @@
     "name": "Ethereal Core (T3)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 7.5,
+    "vendor_price": 16.5,
     "rarity_type": "Special"
   },
   {
@@ -1675,8 +1675,8 @@
     "name": "Void Residue (T3)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 7.5,
+    "vendor_price": 16.5,
     "rarity_type": "Special"
   },
   {
@@ -1685,8 +1685,8 @@
     "name": "Spell Dust (T4)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1695,8 +1695,8 @@
     "name": "Arcane Essence (T4)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1705,8 +1705,8 @@
     "name": "Resonant Shard (T4)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1715,8 +1715,8 @@
     "name": "Runic Rune Fragment (T4)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1725,8 +1725,8 @@
     "name": "Aether Catalyst (T4)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 10.0,
+    "vendor_price": 20.0,
     "rarity_type": "Standard"
   },
   {
@@ -1735,8 +1735,8 @@
     "name": "Ethereal Core (T4)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 15.0,
+    "vendor_price": 30.0,
     "rarity_type": "Special"
   },
   {
@@ -1745,8 +1745,8 @@
     "name": "Void Residue (T4)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 15.0,
+    "vendor_price": 30.0,
     "rarity_type": "Special"
   },
   {
@@ -1755,8 +1755,8 @@
     "name": "Spell Dust (T5)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1765,8 +1765,8 @@
     "name": "Arcane Essence (T5)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1775,8 +1775,8 @@
     "name": "Resonant Shard (T5)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1785,8 +1785,8 @@
     "name": "Runic Rune Fragment (T5)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1795,8 +1795,8 @@
     "name": "Aether Catalyst (T5)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 20.0,
+    "vendor_price": 45.0,
     "rarity_type": "Standard"
   },
   {
@@ -1805,8 +1805,8 @@
     "name": "Ethereal Core (T5)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 30.0,
+    "vendor_price": 67.5,
     "rarity_type": "Special"
   },
   {
@@ -1815,8 +1815,8 @@
     "name": "Void Residue (T5)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 30.0,
+    "vendor_price": 67.5,
     "rarity_type": "Special"
   },
   {
@@ -1825,8 +1825,8 @@
     "name": "Spell Dust (T6)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1835,8 +1835,8 @@
     "name": "Arcane Essence (T6)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1845,8 +1845,8 @@
     "name": "Resonant Shard (T6)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1855,8 +1855,8 @@
     "name": "Runic Rune Fragment (T6)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1865,8 +1865,8 @@
     "name": "Aether Catalyst (T6)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 45.0,
+    "vendor_price": 90.0,
     "rarity_type": "Standard"
   },
   {
@@ -1875,8 +1875,8 @@
     "name": "Ethereal Core (T6)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 67.5,
+    "vendor_price": 135.0,
     "rarity_type": "Special"
   },
   {
@@ -1885,8 +1885,8 @@
     "name": "Void Residue (T6)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 67.5,
+    "vendor_price": 135.0,
     "rarity_type": "Special"
   },
   {
@@ -1895,8 +1895,8 @@
     "name": "Spell Dust (T7)",
     "description": "Fine dust of residual arcane energy.",
     "use": "Basic enchanting, inks, minor catalysts.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1905,8 +1905,8 @@
     "name": "Arcane Essence (T7)",
     "description": "Stabilized magical essence in liquid form.",
     "use": "Enchanting catalysts, scribing inks.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1915,8 +1915,8 @@
     "name": "Resonant Shard (T7)",
     "description": "A solid shard holding a spell’s resonance.",
     "use": "Foci, rune work, stronger enchantments.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1925,8 +1925,8 @@
     "name": "Runic Rune Fragment (T7)",
     "description": "A broken glyph fragment still humming softly.",
     "use": "Scribing, wards, enchant patterns.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1935,8 +1935,8 @@
     "name": "Aether Catalyst (T7)",
     "description": "A catalyst that triggers or stabilizes magic.",
     "use": "Binding, upgrading, ritual components.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 90.0,
+    "vendor_price": 180.0,
     "rarity_type": "Standard"
   },
   {
@@ -1945,8 +1945,8 @@
     "name": "Ethereal Core (T7)",
     "description": "A dense core of concentrated planar energy.",
     "use": "Powerful enchantments, rare devices.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 135.0,
+    "vendor_price": 270.0,
     "rarity_type": "Special"
   },
   {
@@ -1955,8 +1955,8 @@
     "name": "Void Residue (T7)",
     "description": "Unstable residue touched by the void.",
     "use": "High-risk crafting, experimentation.",
-    "base_price": NaN,
-    "vendor_price": NaN,
+    "base_price": 135.0,
+    "vendor_price": 270.0,
     "rarity_type": "Special"
   }
 ]
