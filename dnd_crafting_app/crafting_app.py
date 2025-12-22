@@ -9,7 +9,6 @@ import math
 import streamlit as st
 
 st.set_page_config(page_title="D&D Crafting Simulator", layout="wide")
-
 DATA_DIR = Path(__file__).parent / "data"
 
 # ---------- Load JSON ----------
@@ -24,19 +23,25 @@ TIER_UNLOCKS: List[Dict[str, Any]] = load_json(str(DATA_DIR / "tier_unlocks.json
 XP_TABLE: Dict[str, int] = load_json(str(DATA_DIR / "xp_table.json"))
 XP_TABLE = {int(k): int(v) for k, v in XP_TABLE.items()}
 
-# ---------- Constants / tuning ----------
+# ---------- Constants ----------
 ALIASES = {"arcana extraction": "arcane extraction"}  # legacy typo
 SELL_RATE = 0.5  # sell price = vendor_price * SELL_RATE
 
-# Vendor roll parameters (simple, editable)
-VENDOR_STOCK_LINES = 8
-VENDOR_QTY_RANGE = (1, 5)
+# Vendor requirements from you:
+# - Never more than 3 lines
+# - Qty max 4
+VENDOR_STOCK_LINES = 3
+VENDOR_QTY_MAX = 4
+
+# Tier selection weights (normalized in code)
+# Base tier T ~ 90%, T+1 ~ 45%, T+3 ~ 15%
+VENDOR_TIER_WEIGHTS = {"T": 0.90, "T+1": 0.45, "T+3": 0.15}
+
+# Quantity distribution (normalized in code) for qty 1..4:
+# 50% for 1; 35% for 2; 20% for 3; 5% for 4
+VENDOR_QTY_WEIGHTS = {1: 0.50, 2: 0.35, 3: 0.20, 4: 0.05}
 
 # ---------- Helpers ----------
-def canon(s: str) -> str:
-    s = (s or "").strip().lower()
-    return ALIASES.get(s, s)
-
 def title_case_prof(s: str) -> str:
     return (s or "").strip()
 
@@ -88,12 +93,27 @@ def tier_badge(unlocked: int, target: int) -> str:
     col = tier_color(unlocked, target)
     return f'<span style="color:{col};font-weight:700;">T{target}</span>'
 
-# ---------- Build item indices ----------
+def weighted_choice(weights: Dict[Any, float]) -> Any:
+    s = sum(weights.values()) or 1.0
+    r = random.random()
+    acc = 0.0
+    for k, w in weights.items():
+        acc += (w / s)
+        if r <= acc:
+            return k
+    return list(weights.keys())[-1]
+
+def normalize_weights(weights: Dict[Any, float]) -> Dict[Any, float]:
+    s = sum(weights.values()) or 1.0
+    return {k: v / s for k, v in weights.items()}
+
+# ---------- Build indices ----------
 ITEM_TIER: Dict[str, int] = {}
 ITEM_PROF: Dict[str, str] = {}
 ITEM_DESC: Dict[str, str] = {}
 ITEM_USE: Dict[str, str] = {}
 ITEM_VENDOR: Dict[str, float] = {}
+ITEM_BASE: Dict[str, float] = {}
 
 for it in GATHERING_ITEMS:
     nm = it.get("name", "")
@@ -104,6 +124,7 @@ for it in GATHERING_ITEMS:
     ITEM_DESC[nm] = it.get("description", "") or ""
     ITEM_USE[nm] = it.get("use", "") or ""
     ITEM_VENDOR[nm] = safe_float(it.get("vendor_price", 0), 0.0)
+    ITEM_BASE[nm] = safe_float(it.get("base_price", 0), 0.0)
 
 for r in RECIPES:
     nm = r.get("name", "")
@@ -113,7 +134,9 @@ for r in RECIPES:
     ITEM_DESC.setdefault(nm, r.get("description", "") or "")
     ITEM_USE.setdefault(nm, r.get("use", "") or "")
     ITEM_VENDOR.setdefault(nm, safe_float(r.get("vendor_price", 0), 0.0))
+    ITEM_BASE.setdefault(nm, safe_float(r.get("base_price", 0), 0.0))
 
+# Crafting mats used per craft profession
 CRAFT_PROF_TO_MATS: Dict[str, set] = defaultdict(set)
 for r in RECIPES:
     craft_prof = title_case_prof(r.get("profession", "") or "")
@@ -121,10 +144,12 @@ for r in RECIPES:
         if c.get("name"):
             CRAFT_PROF_TO_MATS[craft_prof].add(c["name"])
 
+# Group gathering items by profession
 gathering_by_prof = defaultdict(list)
 for it in GATHERING_ITEMS:
     gathering_by_prof[title_case_prof(it.get("profession", "") or "")].append(it)
 
+# Recipes by prof + id
 recipes_by_prof = defaultdict(list)
 recipes_by_id = {}
 for r in RECIPES:
@@ -143,16 +168,20 @@ def init_state():
         st.session_state.undo_stack = []
     if "vendor_offers" not in st.session_state:
         st.session_state.vendor_offers = {}
+    if "gather_results" not in st.session_state:
+        # per player: dict with last roll result
+        st.session_state.gather_results = {}
 
 init_state()
 
-# ---------- Mutation helpers ----------
+# ---------- Mutations ----------
 def push_undo(player_name: str, label: str):
     st.session_state.undo_stack.append({
         "player": player_name,
         "label": label,
         "prev_inv": copy.deepcopy(st.session_state.inventories[player_name]),
         "prev_players": copy.deepcopy(st.session_state.players),
+        "prev_gather": copy.deepcopy(st.session_state.gather_results.get(player_name)),
     })
 
 def restore_from_undo():
@@ -160,6 +189,10 @@ def restore_from_undo():
     pname = last["player"]
     st.session_state.inventories[pname] = last["prev_inv"]
     st.session_state.players = last["prev_players"]
+    if last.get("prev_gather") is None:
+        st.session_state.gather_results.pop(pname, None)
+    else:
+        st.session_state.gather_results[pname] = last["prev_gather"]
     st.success(f"Undid: {last['label']} ({pname})")
     st.rerun()
 
@@ -214,31 +247,29 @@ def crafting_xp_from_components(recipe: Dict[str, Any]) -> int:
 def gathering_xp_for_item(item_name: str) -> int:
     return int(ITEM_TIER.get(item_name, 1))
 
-# ---------- Vendor generation ----------
-def vendor_tier_weights(unlocked_tier: int) -> Dict[int, float]:
-    weights = {}
-    for t in range(1, 8):
-        if t > unlocked_tier + 2:
-            continue
-        if t <= unlocked_tier - 1:
-            weights[t] = 0.20
-        elif t == unlocked_tier:
-            weights[t] = 1.00
-        elif t == unlocked_tier + 1:
-            weights[t] = 0.35
-        elif t == unlocked_tier + 2:
-            weights[t] = 0.12
-    s = sum(weights.values()) or 1.0
-    return {k: v / s for k, v in weights.items()}
+# ---------- Vendor logic ----------
+def effective_unit_price(item: Dict[str, Any]) -> float:
+    # Prefer vendor_price; fallback to base_price
+    v = safe_float(item.get("vendor_price", 0), 0.0)
+    if v > 0:
+        return v
+    b = safe_float(item.get("base_price", 0), 0.0)
+    return b
 
-def weighted_choice(weights: Dict[int, float]) -> int:
-    r = random.random()
-    acc = 0.0
-    for k, w in sorted(weights.items()):
-        acc += w
-        if r <= acc:
-            return k
-    return sorted(weights.keys())[-1]
+def choose_vendor_tier(unlocked: int) -> int:
+    # Choose from T, T+1, T+3 (clamped)
+    key = weighted_choice(normalize_weights(VENDOR_TIER_WEIGHTS))
+    if key == "T":
+        t = unlocked
+    elif key == "T+1":
+        t = unlocked + 1
+    else:
+        t = unlocked + 3
+    return max(1, min(7, t))
+
+def choose_vendor_qty() -> int:
+    q = weighted_choice(normalize_weights(VENDOR_QTY_WEIGHTS))
+    return max(1, min(VENDOR_QTY_MAX, int(q)))
 
 def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> List[Dict[str, Any]]:
     chosen_prof = title_case_prof(chosen_prof)
@@ -246,44 +277,62 @@ def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> 
     skill_level = int(skills.get(chosen_prof, {}).get("level", 1))
     unlocked = max_tier_for_level(skill_level)
 
+    # Pool:
     if chosen_prof in gathering_by_prof:
         candidates = list(gathering_by_prof[chosen_prof])
     else:
         mats = CRAFT_PROF_TO_MATS.get(chosen_prof, set())
         candidates = [it for it in GATHERING_ITEMS if it.get("name") in mats]
 
+    # Organize by tier
     by_tier = defaultdict(list)
     for it in candidates:
         t = int(it.get("tier", 1))
-        if t <= unlocked + 2:
+        if t <= unlocked + 3:  # vendor can go up to T+3
             by_tier[t].append(it)
-
-    weights = vendor_tier_weights(unlocked)
 
     lines = []
     attempts = 0
-    while len(lines) < VENDOR_STOCK_LINES and attempts < VENDOR_STOCK_LINES * 4:
+    # ensure unique item lines when possible
+    used_names = set()
+    while len(lines) < VENDOR_STOCK_LINES and attempts < 50:
         attempts += 1
-        t = weighted_choice(weights)
-        pool = by_tier.get(t) or []
-        if not pool:
+        t = choose_vendor_tier(unlocked)
+        if t > unlocked + 3:
             continue
+        pool = by_tier.get(t, [])
+        if not pool:
+            # fallback: if target tier missing, fall back downward until found
+            tt = t
+            while tt >= 1 and not by_tier.get(tt):
+                tt -= 1
+            pool = by_tier.get(tt, [])
+            if not pool:
+                continue
+            t = tt
+
         it = random.choice(pool)
         nm = it.get("name","")
-        qty = random.randint(*VENDOR_QTY_RANGE)
-        unit = safe_float(it.get("vendor_price", 0), 0.0)
+        if nm in used_names and len(pool) > 1:
+            continue
+
+        qty = choose_vendor_qty()
+        unit = effective_unit_price(it)
         total = unit * qty
+
+        used_names.add(nm)
         lines.append({
             "name": nm,
             "tier": int(it.get("tier", 1)),
-            "qty": qty,
-            "unit_price": unit,
-            "total_price": total,
+            "qty": int(qty),
+            "unit_price": float(unit),
+            "total_price": float(total),
             "unlocked_tier": unlocked,
         })
+
     return lines
 
-# ---------- Recipe discovery ----------
+# ---------- Discovery logic ----------
 def best_partial_match(player: Dict[str, Any], craft_prof: str, chosen_items: List[str]) -> Tuple[int, Optional[str]]:
     craft_prof = title_case_prof(craft_prof)
     known = set(player.get("known_recipes", []))
@@ -325,7 +374,13 @@ def validate_discovery_selection(inv: Dict[str, int], picks: List[str]) -> Tuple
     return True, ""
 
 # ---------- Automated gathering ----------
-def gathered_tier_from_roll(unlocked_tier: int, roll_total: int) -> int:
+def gathered_tier_from_roll(unlocked_tier: int, roll_total: int) -> Optional[int]:
+    # Your updated rule:
+    # - If T1 and roll < 10 => FAIL (nothing)
+    # - Otherwise: 10+ => T, 15+ => T+1, 20+ => T+2, <10 => T-1
+    if unlocked_tier == 1 and roll_total < 10:
+        return None
+
     if roll_total >= 20:
         target = unlocked_tier + 2
     elif roll_total >= 15:
@@ -334,12 +389,11 @@ def gathered_tier_from_roll(unlocked_tier: int, roll_total: int) -> int:
         target = unlocked_tier
     else:
         target = max(1, unlocked_tier - 1)
+
     return max(1, min(7, target))
 
-def choose_random_gather_item(prof: str, tier: int, unlocked_tier: int) -> Optional[Dict[str, Any]]:
+def choose_random_gather_item(prof: str, tier: int) -> Optional[Dict[str, Any]]:
     prof = title_case_prof(prof)
-    if tier > unlocked_tier + 2:
-        return None
     pool = [it for it in gathering_by_prof.get(prof, []) if int(it.get("tier", 1)) == tier]
     return random.choice(pool) if pool else None
 
@@ -351,7 +405,10 @@ with u1:
     if st.button("↩️ Undo", disabled=(len(st.session_state.undo_stack) == 0)):
         restore_from_undo()
 with u2:
-    st.caption(f"Last: {st.session_state.undo_stack[-1]['label']} ({st.session_state.undo_stack[-1]['player']})" if st.session_state.undo_stack else "No actions to undo yet.")
+    st.caption(
+        f"Last: {st.session_state.undo_stack[-1]['label']} ({st.session_state.undo_stack[-1]['player']})"
+        if st.session_state.undo_stack else "No actions to undo yet."
+    )
 
 if not st.session_state.players:
     st.info("Add players in data/players.json, then refresh.")
@@ -370,6 +427,7 @@ for idx, player in enumerate(st.session_state.players):
     with tabs[idx]:
         st.subheader(f"👤 {pname}")
 
+        # Skills
         st.markdown("### Skills")
         cols = st.columns(2)
         for i, s in enumerate(list(skills.keys())):
@@ -398,6 +456,7 @@ for idx, player in enumerate(st.session_state.players):
 
         st.divider()
 
+        # Inventory
         with st.expander("🎒 Inventory", expanded=False):
             c1, c2, c3 = st.columns([2,2,2])
             sort_choice = c1.selectbox("Sort", ["Name","Tier","Quantity"], key=f"{pname}-inv-sort")
@@ -452,6 +511,7 @@ for idx, player in enumerate(st.session_state.players):
                                 add_item(inv, nm, 1)
                                 st.rerun()
 
+        # Gathering (roll-based, empty until you press Roll)
         with st.expander("⛏️ Gathering", expanded=False):
             if not gathering_prof:
                 st.caption("No gathering profession.")
@@ -460,29 +520,62 @@ for idx, player in enumerate(st.session_state.players):
                 unlocked = max_tier_for_level(skill_lvl)
 
                 st.markdown("#### Automated gathering (enter your in-game roll)")
-                roll_total = st.number_input("Your total roll (d20 + modifiers)", min_value=0, max_value=60, value=10, step=1, key=f"{pname}-g-roll")
-                target_tier = gathered_tier_from_roll(unlocked, int(roll_total))
-                dc = dc_for_target_tier(unlocked, target_tier)
-                st.markdown(f"Result tier: {tier_badge(unlocked, target_tier)} • DC {dc if dc else '—'}", unsafe_allow_html=True)
+                roll_total = st.number_input(
+                    "Your total roll (d20 + modifiers)",
+                    min_value=0, max_value=60, value=10, step=1,
+                    key=f"{pname}-g-roll"
+                )
 
-                found = choose_random_gather_item(gathering_prof, target_tier, unlocked)
-                if found:
-                    nm = found.get("name","")
-                    xp_gain = gathering_xp_for_item(nm)
-                    st.write(f"**You found:** {nm} ({tier_badge(unlocked, target_tier)})", unsafe_allow_html=True)
-                    if found.get("description"):
-                        st.caption(found["description"])
-                    if found.get("use"):
-                        st.caption(f"Use: {found['use']}")
-                    st.caption(f"XP if gathered: **{xp_gain}**")
-                    if st.button("Add to inventory (Gathered)", key=f"{pname}-g-add-found"):
-                        push_undo(pname, f"Gathered {nm}")
-                        add_item(inv, nm, 1)
-                        apply_xp_delta(get_player(pname), gathering_prof, xp_gain)
+                colA, colB = st.columns([2, 6])
+                with colA:
+                    if st.button("Roll gathering", key=f"{pname}-g-roll-btn"):
+                        push_undo(pname, "Gathering roll")
+                        target_tier = gathered_tier_from_roll(unlocked, int(roll_total))
+                        if target_tier is None:
+                            st.session_state.gather_results[pname] = {"failed": True, "roll": int(roll_total)}
+                        else:
+                            found = choose_random_gather_item(gathering_prof, target_tier)
+                            st.session_state.gather_results[pname] = {
+                                "failed": False,
+                                "roll": int(roll_total),
+                                "tier": int(target_tier),
+                                "item": found.get("name","") if found else "",
+                                "profession": gathering_prof,
+                            }
                         st.rerun()
-                else:
-                    st.warning("No item found for that tier (check gathering_items.json).")
 
+                result = st.session_state.gather_results.get(pname)
+                if not result:
+                    st.caption("No roll yet. Enter your roll and press **Roll gathering**.")
+                else:
+                    if result.get("failed"):
+                        st.error("Gathering failed! You didn’t find anything this time.")
+                    else:
+                        t = int(result.get("tier", 1))
+                        item_name = result.get("item","")
+                        dc = dc_for_target_tier(unlocked, t)
+                        st.markdown(f"Result tier: {tier_badge(unlocked, t)} • DC {dc if dc else '—'}", unsafe_allow_html=True)
+
+                        if not item_name:
+                            st.warning("No item found for that tier (check gathering_items.json).")
+                        else:
+                            xp_gain = gathering_xp_for_item(item_name)
+                            st.write(f"**You found:** {item_name} ({tier_badge(unlocked, t)})", unsafe_allow_html=True)
+                            if ITEM_DESC.get(item_name):
+                                st.caption(ITEM_DESC[item_name])
+                            if ITEM_USE.get(item_name):
+                                st.caption(f"Use: {ITEM_USE[item_name]}")
+                            st.caption(f"XP if gathered: **{xp_gain}**")
+
+                            if st.button("Add to inventory (Gathered)", key=f"{pname}-g-add-found"):
+                                push_undo(pname, f"Gathered {item_name}")
+                                add_item(inv, item_name, 1)
+                                apply_xp_delta(get_player(pname), gathering_prof, xp_gain)
+                                # clear result after adding
+                                st.session_state.gather_results.pop(pname, None)
+                                st.rerun()
+
+        # Crafting
         with st.expander("🧪 Crafting", expanded=False):
             if not crafting_profs:
                 st.caption("No crafting professions.")
@@ -587,6 +680,7 @@ for idx, player in enumerate(st.session_state.players):
                                             st.caption("Missing: " + ", ".join(missing))
                                 st.divider()
 
+        # Vendor
         with st.expander("🧾 Vendor", expanded=False):
             prof_options = []
             if gathering_prof:
@@ -598,6 +692,8 @@ for idx, player in enumerate(st.session_state.players):
             else:
                 chosen_prof = st.selectbox("Shop type (your professions)", prof_options, key=f"{pname}-vendor-prof")
                 st.caption("If you pick a crafting profession, the vendor sells ONLY components used by that craft.")
+                st.caption("Per visit: max **3 items**, max **4 qty** each.")
+
                 if st.button("Generate vendor stock", key=f"{pname}-vendor-roll"):
                     lines = generate_vendor_stock_for_prof(get_player(pname), chosen_prof)
                     st.session_state.vendor_offers[pname] = {"profession": chosen_prof, "lines": lines}
@@ -613,11 +709,15 @@ for idx, player in enumerate(st.session_state.players):
                         unit = safe_float(line.get("unit_price", 0), 0.0)
                         total = safe_float(line.get("total_price", unit * qty), unit * qty)
 
+                        unit_disp = f"{safe_int(unit)} gp" if unit > 0 else "—"
+                        total_disp = f"{safe_int(total)} gp" if total > 0 else "—"
+
                         st.write(
                             f"**{nm}** ({tier_badge(line.get('unlocked_tier',99), t)}) • "
-                            f"Qty: **{qty}** • Unit: **{safe_int(unit)} gp** • Total: **{safe_int(total)} gp**",
+                            f"Qty: **{qty}** • Unit: **{unit_disp}** • Total: **{total_disp}**",
                             unsafe_allow_html=True
                         )
+
                         b1, _ = st.columns([2,6])
                         with b1:
                             if st.button("Buy", key=f"{pname}-vendor-buy-{i}-{nm}"):
