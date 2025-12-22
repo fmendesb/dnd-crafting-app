@@ -1,67 +1,58 @@
 [
   {
-    "name": "Serapine",
+    "name": "Seraphine",
+    "gathering_profession": "Mining",
+    "crafting_professions": ["Blacksmithing"],
     "skills": {
-      "Mining": {
-        "level": 1,
-        "xp": 2.0
-      },
-      "Blacksmithing": {
-        "level": 1,
-        "xp": 0.0
-      }
-    }
+      "Mining": { "level": 1, "xp": 2 },
+      "Blacksmithing": { "level": 1, "xp": 0 }
+    },
+    "known_recipes": []
   },
   {
-    "name": "Cadrie",
-    "skills": {
-      "Woodcrafter": {
-        "level": 1,
-        "xp": 1.0
-      },
-      "Cooking": {
-        "level": 1,
-        "xp": 0.0
-      }
+  "name": "Cadrie",
+  "gathering_profession": "",
+  "crafting_professions": ["Cooking", "Woodcrafter"],
+  "skills": {
+    "Cooking": {
+      "level": 1,
+      "xp": 0
+    },
+    "Woodcrafter": {
+      "level": 1,
+      "xp": 1
     }
+  },
+  "known_recipes": []
+},
+  {
+    "name": "Djinn",
+    "gathering_profession": "Herbalism",
+    "crafting_professions": ["Scribing"],
+    "skills": {
+      "Herbalism": { "level": 3, "xp": 1 },
+      "Scribing": { "level": 1, "xp": 0 }
+    },
+    "known_recipes": []
   },
   {
     "name": "Val",
+    "gathering_profession": "Hunting",
+    "crafting_professions": ["Tailoring"],
     "skills": {
-      "Hunting": {
-        "level": 1,
-        "xp": 1.0
-      },
-      "Tailoring": {
-        "level": 1,
-        "xp": 0.0
-      }
-    }
-  },
-  {
-    "name": "Djinn",
-    "skills": {
-      "Herbalism": {
-        "level": 1,
-        "xp": 3.0
-      },
-      "Scribing": {
-        "level": 1,
-        "xp": 0.0
-      }
-    }
+      "Hunting": { "level": 1, "xp": 1 },
+      "Tailoring": { "level": 1, "xp": 0 }
+    },
+    "known_recipes": []
   },
   {
     "name": "Ashur",
+    "gathering_profession": "Arcane Extraction",
+    "crafting_professions": ["Enchanting"],
     "skills": {
-      "Arcana Extraction": {
-        "level": 1,
-        "xp": 2.0
-      },
-      "Enchanting": {
-        "level": 1,
-        "xp": 1.0
-      }
-    }
+      "Arcane Extraction": { "level": 2, "xp": 0 },
+      "Enchanting": { "level": 1, "xp": 1 }
+    },
+    "known_recipes": []
   }
 ]
