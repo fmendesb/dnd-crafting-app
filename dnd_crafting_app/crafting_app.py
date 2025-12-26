@@ -6,6 +6,7 @@ import copy
 import random
 import math
 import re
+import datetime
 
 import streamlit as st
 
@@ -58,7 +59,7 @@ SELL_RATE = 0.5
 
 VENDOR_MAX_LINES = 3
 VENDOR_QTY_MAX = 4
-VENDOR_TIER_WEIGHTS = {"T": 0.90, "T+1": 0.45, "T+2": 0.15}
+VENDOR_TIER_WEIGHTS = {"T": 0.90, "T+1": 0.20, "T+2": 0.05}
 VENDOR_QTY_WEIGHTS = {1: 0.50, 2: 0.35, 3: 0.20, 4: 0.05}
 VENDOR_LINECOUNT_WEIGHTS = {0: 0.10, 1: 0.35, 2: 0.35, 3: 0.20}
 FALLBACK_TIER_GP = {1: 2, 2: 5, 3: 11, 4: 20, 5: 45, 6: 90, 7: 180}
@@ -188,8 +189,8 @@ def tier_badge_html(unlocked: int, target: int) -> str:
 # -----------------------------
 # Pricing
 # -----------------------------
-PRICE_KEYS_VENDOR = ["vendor_price", "vendorPrice", "vendor_gp", "vendorGp", "vendorCost", "vendor_cost"]
-PRICE_KEYS_BASE = ["base_price", "basePrice", "base_gp", "baseGp", "baseCost", "base_cost", "price", "cost", "gp"]
+PRICE_KEYS_VENDOR = ["vendor_price_gp", "vendorPriceGp", "vendor_gp", "vendorGp", "vendor_price", "vendorPrice", "vendorCost", "vendor_cost"]
+PRICE_KEYS_BASE = ["base_price_gp", "basePriceGp", "base_price", "basePrice", "base_gp", "baseGp", "baseCost", "base_cost", "price", "cost", "gp"]
 
 def get_price(item: Dict[str, Any], keys: List[str]) -> float:
     for k in keys:
@@ -331,7 +332,9 @@ def init_session_state():
     if "gather_results" not in st.session_state:
         st.session_state.gather_results = {}
     if "jobs" not in st.session_state:
-        st.session_state.jobs = {}  # per player list of timed jobs
+        st.session_state.jobs = {}
+    if "activity_log" not in st.session_state:
+        st.session_state.activity_log = {}  # per player list of timed jobs
     if "notices" not in st.session_state:
         st.session_state.notices = {}  # per player list of messages
 
@@ -376,6 +379,12 @@ def sb_bootstrap():
         else:
             st.session_state.jobs[pname] = []
 
+        # activity log
+        st.session_state.activity_log.setdefault(pname, [])
+        lg = (state.get('activity_log') if isinstance(state, dict) else None) or []
+        if isinstance(lg, list):
+            st.session_state.activity_log[pname] = lg
+
 def save_player_now(pname: str):
     if SB is None:
         return
@@ -384,6 +393,7 @@ def save_player_now(pname: str):
         "player": {"skills": pl.get("skills", {}), "known_recipes": pl.get("known_recipes", [])},
         "inventory": st.session_state.inventories.get(pname, {}),
         "jobs": st.session_state.jobs.get(pname, []),
+        "activity_log": st.session_state.get("activity_log", {}).get(pname, []),
     }
     sb_save_player_state(pname, state)
 
@@ -498,13 +508,23 @@ def get_jobs(pname: str) -> List[Dict[str, Any]]:
     return st.session_state.jobs[pname]
 
 def add_notice(pname: str, msg: str):
-    st.session_state.notices.setdefault(pname, []).append(str(msg))
+    """Persist a user-facing message for this player (shown once, also kept in Activity Log)."""
+    msg = str(msg)
+    st.session_state.notices.setdefault(pname, []).append(msg)
+
+    # Keep an activity log the player can read later (helps when timers finish while they're away)
+    st.session_state.activity_log.setdefault(pname, [])
+    st.session_state.activity_log[pname].append({"ts": now_ts(), "msg": msg})
+    st.session_state.activity_log[pname] = st.session_state.activity_log[pname][-80:]  # cap
 
 def pop_notices(pname: str) -> List[str]:
-    out = st.session_state.notices.get(pname, [])
-    st.session_state.notices[pname] = []
-    return out
-
+    """Return only the notices that haven't been shown yet this session."""
+    st.session_state.notice_cursor = st.session_state.get("notice_cursor", {})
+    cur = int(st.session_state.notice_cursor.get(pname, 0))
+    all_msgs = st.session_state.notices.get(pname, [])
+    new_msgs = all_msgs[cur:]
+    st.session_state.notice_cursor[pname] = len(all_msgs)
+    return new_msgs
 def active_job(pname: str) -> Optional[Dict[str, Any]]:
     for j in get_jobs(pname):
         if not j.get("done") and int(j.get("ends_at", 0)) > now_ts():
@@ -609,11 +629,11 @@ def discovery_hint_for_pair(craft_prof: str, chosen: list, unlocked_tier: int) -
 def gathered_tier_from_roll(unlocked_tier: int, roll_total: int) -> Optional[int]:
     if unlocked_tier == 1 and roll_total < 10:
         return None
-    if roll_total >= 20:
+    if roll_total >= 22:
         target = unlocked_tier + 2
-    elif roll_total >= 15:
+    elif roll_total >= 18:
         target = unlocked_tier + 1
-    elif roll_total >= 10:
+    elif roll_total >= 12:
         target = unlocked_tier
     else:
         target = max(1, unlocked_tier - 1)
@@ -777,8 +797,21 @@ for idx, player in enumerate(st.session_state.players):
     inv: Dict[str, int] = st.session_state.inventories[pname]
     skills: Dict[str, Dict[str, Any]] = player.get("skills", {})
 
+    # Profession data can be stored explicitly OR inferred from the skills dict
     gathering_prof = canon_prof(player.get("gathering_profession", "") or "")
+    if not gathering_prof:
+        for k in skills.keys():
+            ck = canon_prof(k)
+            if ck in gathering_professions:
+                gathering_prof = ck
+                break
+
     crafting_profs = [canon_prof(x) for x in (player.get("crafting_professions", []) or [])]
+    if not crafting_profs:
+        for k in skills.keys():
+            ck = canon_prof(k)
+            if ck in crafting_professions:
+                crafting_profs.append(ck)
 
     with tabs[idx]:
         st.subheader(f"👤 {pname}")
@@ -786,7 +819,16 @@ for idx, player in enumerate(st.session_state.players):
         process_jobs(pname)
         for _msg in pop_notices(pname):
             st.success(_msg)
-        
+
+        with st.expander("📜 Activity log", expanded=False):
+            log = st.session_state.get("activity_log", {}).get(pname, []) or []
+            if not log:
+                st.caption("No activity yet.")
+            else:
+                for entry in reversed(log[-25:]):
+                    ts = datetime.datetime.fromtimestamp(int(entry.get("ts", 0))).strftime("%Y-%m-%d %H:%M:%S")
+                    st.write(f"- **{ts}**: {entry.get('msg','')}")
+
         _job = active_job(pname)
         if _job:
             remaining = int(_job.get("ends_at", 0)) - now_ts()
@@ -815,9 +857,9 @@ for idx, player in enumerate(st.session_state.players):
                 st.write(f"**{s}**")
                 st.progress(progress)
                 if next_lvl:
-                    st.caption(f"Tier {unlocked_tier} • Unlock T{next_tier} at level {next_lvl} • XP {cur_xp}/{needed}")
+                    st.caption(f"Level {level} • Tier {unlocked_tier} • Unlock T{next_tier} at level {next_lvl} • XP {cur_xp}/{needed}")
                 else:
-                    st.caption(f"Tier {unlocked_tier} • XP {cur_xp}/{needed}")
+                    st.caption(f"Level {level} • Tier {unlocked_tier} • XP {cur_xp}/{needed}")
 
                 b1, b2, _ = st.columns([1, 1, 5])
                 with b1:
@@ -875,6 +917,8 @@ for idx, player in enumerate(st.session_state.players):
                         st.write(f"**{nm}** ({tier_badge_html(99, t)})", unsafe_allow_html=True)
                         if ITEM_DESC.get(nm):
                             st.caption(ITEM_DESC[nm])
+                        if ITEM_USE.get(nm):
+                            st.caption(ITEM_USE[nm])
                     with mid:
                         st.write(f"Qty: **{qty}**")
                         st.caption(f"Sell: **{sell} gp**")
