@@ -80,6 +80,11 @@ def canon_prof(s: str) -> str:
 GATHER_PROFS = {canon_prof(x.get("profession", "")) for x in GATHERING_ITEMS if canon_prof(x.get("profession", ""))}
 CRAFT_PROFS = {canon_prof(x.get("profession", "")) for x in RECIPES if canon_prof(x.get("profession", ""))}
 
+# Backwards-compatible aliases (older code paths)
+gathering_professions = GATHER_PROFS
+crafting_professions = CRAFT_PROFS
+
+
 def normalize_players(players: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     out: List[Dict[str, Any]] = []
     for p in players or []:
