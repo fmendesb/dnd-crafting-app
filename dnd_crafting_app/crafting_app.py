@@ -330,6 +330,10 @@ def init_session_state():
         st.session_state.vendor_offers = {}
     if "gather_results" not in st.session_state:
         st.session_state.gather_results = {}
+    if "jobs" not in st.session_state:
+        st.session_state.jobs = {}  # per player list of timed jobs
+    if "notices" not in st.session_state:
+        st.session_state.notices = {}  # per player list of messages
 
 init_session_state()
 
@@ -351,6 +355,7 @@ def sb_bootstrap():
             init_state = {
                 "player": {"skills": p.get("skills", {}), "known_recipes": p.get("known_recipes", [])},
                 "inventory": st.session_state.inventories.get(pname, {}),
+                "jobs": [],
             }
             sb_save_player_state(pname, init_state)
             continue
@@ -364,6 +369,13 @@ def sb_bootstrap():
             if "known_recipes" in pdata:
                 p["known_recipes"] = pdata.get("known_recipes", p.get("known_recipes", []))
 
+        # Load timed jobs
+        j = saved.get("jobs", [])
+        if isinstance(j, list):
+            st.session_state.jobs[pname] = j
+        else:
+            st.session_state.jobs[pname] = []
+
 def save_player_now(pname: str):
     if SB is None:
         return
@@ -371,6 +383,7 @@ def save_player_now(pname: str):
     state = {
         "player": {"skills": pl.get("skills", {}), "known_recipes": pl.get("known_recipes", [])},
         "inventory": st.session_state.inventories.get(pname, {}),
+        "jobs": st.session_state.jobs.get(pname, []),
     }
     sb_save_player_state(pname, state)
 
@@ -455,6 +468,140 @@ def crafting_xp_from_components(recipe: Dict[str, Any]) -> int:
 
 def gathering_xp_for_item(item_name: str) -> int:
     return int(ITEM_TIER.get(canon_name(item_name), 1))
+
+# -----------------------------
+# DC + Timed Actions (lightweight)
+# -----------------------------
+DC_BY_TIER = {1: 10, 2: 12, 3: 14, 4: 16, 5: 18, 6: 20, 7: 22}
+
+# Real-time timers per tier (seconds). You asked: T6 = 2 hours.
+TIMER_DISCOVER_SEC = {1: 60, 2: 5*60, 3: 15*60, 4: 30*60, 5: 60*60, 6: 2*60*60, 7: 3*60*60}
+TIMER_CRAFT_SEC    = {1: 60, 2: 5*60, 3: 15*60, 4: 30*60, 5: 60*60, 6: 2*60*60, 7: 3*60*60}
+
+def now_ts() -> int:
+    import time as _time
+    return int(_time.time())
+
+def fmt_seconds(sec: int) -> str:
+    sec = max(0, int(sec))
+    h = sec // 3600; m = (sec % 3600) // 60; s = sec % 60
+    if h > 0:
+        return f"{h}h {m:02d}m {s:02d}s"
+    if m > 0:
+        return f"{m}m {s:02d}s"
+    return f"{s}s"
+
+def get_jobs(pname: str) -> List[Dict[str, Any]]:
+    j = st.session_state.jobs.setdefault(pname, [])
+    if not isinstance(j, list):
+        st.session_state.jobs[pname] = []
+    return st.session_state.jobs[pname]
+
+def add_notice(pname: str, msg: str):
+    st.session_state.notices.setdefault(pname, []).append(str(msg))
+
+def pop_notices(pname: str) -> List[str]:
+    out = st.session_state.notices.get(pname, [])
+    st.session_state.notices[pname] = []
+    return out
+
+def active_job(pname: str) -> Optional[Dict[str, Any]]:
+    for j in get_jobs(pname):
+        if not j.get("done") and int(j.get("ends_at", 0)) > now_ts():
+            return j
+    return None
+
+def start_job(pname: str, job: Dict[str, Any]) -> bool:
+    # Only one active job per player to keep phone UX simple.
+    if active_job(pname):
+        add_notice(pname, "You already have an action in progress. Finish it before starting another.")
+        return False
+    job = dict(job)
+    job.setdefault("id", f"job_{now_ts()}_{random.randint(1000,9999)}")
+    job["started_at"] = now_ts()
+    job.setdefault("done", False)
+    get_jobs(pname).append(job)
+    save_player_now(pname)
+    return True
+
+def complete_job(pname: str, job: Dict[str, Any]):
+    """Apply job outcome when timer ends."""
+    pl = get_player(pname)
+    inv = st.session_state.inventories.setdefault(pname, {})
+    jtype = job.get("type")
+
+    if jtype == "discover":
+        if job.get("success") and job.get("recipe_id") in recipes_by_id:
+            rid = job["recipe_id"]
+            if rid not in pl.get("known_recipes", []):
+                pl.setdefault("known_recipes", []).append(rid)
+            r = recipes_by_id[rid]
+            add_item(inv, canon_name(r.get("name", "")), 1)
+            xp_gain = int(job.get("xp_gain", 0))
+            if xp_gain > 0:
+                apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
+            add_notice(pname, f"✅ You discovered **{r.get('name')}** and crafted 1!")
+        else:
+            add_notice(pname, str(job.get("result_msg", "Discovery finished.")))
+
+    elif jtype == "craft":
+        rid = job.get("recipe_id")
+        if job.get("success") and rid in recipes_by_id:
+            r = recipes_by_id[rid]
+            add_item(inv, canon_name(r.get("name", "")), 1)
+            xp_gain = int(job.get("xp_gain", 0))
+            if xp_gain > 0:
+                apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
+            add_notice(pname, f"✅ Crafted 1 × **{r.get('name')}**!")
+        else:
+            add_notice(pname, str(job.get("result_msg", "Crafting finished.")))
+
+    job["done"] = True
+    save_player_now(pname)
+
+def process_jobs(pname: str):
+    changed = False
+    for j in list(get_jobs(pname)):
+        if j.get("done"):
+            continue
+        if now_ts() >= int(j.get("ends_at", 0)):
+            complete_job(pname, j)
+            changed = True
+    if changed:
+        st.session_state.jobs[pname] = [x for x in get_jobs(pname) if not x.get("done")]
+        save_player_now(pname)
+
+def dc_for_tier(recipe_tier: int, player_tier: int) -> int:
+    """Base DC by recipe tier, eased if player tier is higher (cap the discount)."""
+    base = int(DC_BY_TIER.get(int(recipe_tier), 10))
+    diff = int(player_tier) - int(recipe_tier)
+    if diff > 0:
+        base -= min(6, 2 * diff)
+    elif diff < 0:
+        base += min(6, 2 * abs(diff))
+    return max(5, base)
+
+def discovery_hint_for_pair(craft_prof: str, chosen: list, unlocked_tier: int) -> str:
+    """If two of the three items match a recipe, hint what kind of third item to try."""
+    chosen_bases = [base_name(canon_name(x)) for x in chosen]
+    # Look through recipes for this profession that are 'near' the player's tier window.
+    candidates = [r for r in RECIPES if canon_name(r.get("profession","")) == canon_name(craft_prof)]
+    candidates = [r for r in candidates if int(r.get("tier", 1)) <= int(unlocked_tier) + 2]
+    # Build base-name sets for each recipe
+    for i in range(3):
+        for j in range(i+1, 3):
+            pair = {chosen_bases[i], chosen_bases[j]}
+            for r in candidates:
+                comps = [base_name(canon_name(c.get("name",""))) for c in r.get("components", [])]
+                if len(comps) != 3:
+                    continue
+                comp_set = set(comps)
+                if pair.issubset(comp_set):
+                    remaining = list(comp_set - pair)
+                    if remaining:
+                        # Return a friendly hint
+                        return f"Your roll suggests **{chosen[i]}** and **{chosen[j]}** belong together. Try pairing them with something like **{remaining[0]} (any tier)**."
+    return ""
 
 # -----------------------------
 # Automated Gathering
@@ -636,6 +783,21 @@ for idx, player in enumerate(st.session_state.players):
     with tabs[idx]:
         st.subheader(f"👤 {pname}")
 
+        process_jobs(pname)
+        for _msg in pop_notices(pname):
+            st.success(_msg)
+        
+        _job = active_job(pname)
+        if _job:
+            remaining = int(_job.get("ends_at", 0)) - now_ts()
+            total = int(_job.get("ends_at", 0)) - int(_job.get("started_at", now_ts()))
+            total = max(1, total)
+            prog = min(max((total - remaining) / total, 0.0), 1.0)
+            with st.expander("⏳ Action in progress", expanded=True):
+                st.write(f"**{_job.get('type', 'action').title()}** (Tier {_job.get('tier', '?')})")
+                st.progress(prog)
+                st.caption(f"Time remaining: {fmt_seconds(remaining)}")
+
         # ---- Skills ----
         st.markdown("### Skills")
         cols = st.columns(2)
@@ -797,6 +959,9 @@ for idx, player in enumerate(st.session_state.players):
                 known_recipes = [r for r in known_recipes if int(r.get("tier", 1)) <= unlocked + 2]
 
                 st.markdown("#### Discover recipes (3 items from your inventory)")
+                # Roll input (required)
+                roll_total = st.number_input("Your discovery roll total (d20 + modifiers)", min_value=0, max_value=50, value=0, step=1, key=f"disc_roll_{pname}_{craft_prof}")
+
                 mats_allowed_exact = CRAFT_PROF_TO_MATS.get(craft_prof, set())
                 mats_allowed_base = CRAFT_PROF_TO_MATS_BASE.get(craft_prof, set())
 
@@ -822,30 +987,74 @@ for idx, player in enumerate(st.session_state.players):
                         if not ok:
                             st.error(msg)
                         else:
-                            push_undo(pname, f"Discovery attempt ({craft_prof})")
-                            consume_selected(inv, chosen)
+                            if roll_total <= 0:
+                                st.error("Please enter your discovery roll total first.")
+                                st.stop()
 
+                            push_undo(pname, f"Discovery attempt ({craft_prof})")
+                            # Consume items immediately (success or fail). No XP on failure.
+                            consume_selected(inv, chosen)
+                            
+                            # Attempt to match a recipe (mixed tiers allowed, crafts at lowest tier that fits).
                             recipe = match_recipe_mixed_tiers(craft_prof, chosen, unlocked)
-                            if recipe is None:
-                                st.error("Nope. That combination doesn’t seem to lead anywhere.")
+                            
+                            # Determine target tier for DC/timer: matched recipe tier, else highest chosen tier capped by visibility.
+                            chosen_tiers = []
+                            for _nm in chosen:
+                                m = TIER_SUFFIX_RE.search(str(_nm))
+                                chosen_tiers.append(int(m.group(1)) if m else 1)
+                            max_chosen = max(chosen_tiers) if chosen_tiers else 1
+                            target_tier = int(recipe.get("tier", max_chosen)) if recipe else min(7, max_chosen)
+                            target_tier = min(7, max(1, target_tier))
+                            
+                            dc = dc_for_tier(target_tier, unlocked)
+                            timer_sec = int(TIMER_DISCOVER_SEC.get(target_tier, 60))
+                            
+                            success = False
+                            result_msg = ""
+                            rid = None
+                            xp_gain = 0
+                            
+                            if recipe:
+                                rid = recipe.get("id")
+                                if roll_total >= dc:
+                                    success = True
+                                    xp_gain = 0  # xp is granted on completion only if success
+                                    result_msg = f"Discovery underway... You feel the materials resonate. (DC {dc})"
+                                else:
+                                    # Valid recipe but failed: consume items, no XP.
+                                    if roll_total < dc - 5:
+                                        result_msg = "You’re unsure these materials belong together."
+                                    else:
+                                        result_msg = "You felt the materials respond to each other, but the crafting failed."
+                            else:
+                                # Invalid recipe: give tiered feedback
+                                if roll_total < dc - 5:
+                                    result_msg = "You’re unsure these materials belong together."
+                                elif roll_total < dc:
+                                    result_msg = "Something about this feels close, like 2 of these might belong to a real recipe."
+                                else:
+                                    hint = discovery_hint_for_pair(craft_prof, chosen, unlocked)
+                                    result_msg = "You’re confident at least two of these materials resonate, but the full combination is wrong."
+                                    if hint:
+                                        result_msg += f"\n\n**Hint:** {hint}"
+                            
+                            ends_at = now_ts() + timer_sec
+                            job = {
+                                "type": "discover",
+                                "profession": craft_prof,
+                                "recipe_id": rid,
+                                "success": bool(success),
+                                "xp_gain": int(crafting_xp_from_components(recipe) if (success and recipe) else 0),
+                                "result_msg": result_msg,
+                                "ends_at": int(ends_at),
+                                "tier": int(target_tier),
+                            }
+                            
+                            if start_job(pname, job):
+                                st.info(f"⏳ Discovery started (T{target_tier}). Time remaining: {fmt_seconds(timer_sec)}")
                                 save_player_now(pname)
                                 st.rerun()
-
-                            rid = recipe.get("id")
-                            player.setdefault("known_recipes", [])
-                            if rid and rid not in player["known_recipes"]:
-                                player["known_recipes"].append(rid)
-
-                            out_name = canon_name(recipe.get("name", ""))
-                            add_item(inv, out_name, 1)
-
-                            xp_gain = crafting_xp_from_components(recipe)
-                            apply_xp_delta(get_player(pname), craft_prof, xp_gain)
-
-                            st.success(f"Success! You created **{out_name}** and learned the recipe.")
-                            save_player_now(pname)
-                            st.rerun()
-
                 st.divider()
                 st.markdown(f"#### Known recipes (visible up to T{unlocked + 2})")
 
@@ -881,25 +1090,47 @@ for idx, player in enumerate(st.session_state.players):
 
                                 left, right = st.columns([2, 6])
                                 with left:
-                                    if st.button("Craft", key=f"{pname}-craft-{r.get('id', nm)}", disabled=(not can)):
-                                        push_undo(pname, f"Crafted {nm}")
-                                        for c in r.get("components", []):
-                                            remove_item(inv, c.get("name", ""), int(c.get("qty", 1)))
-                                        add_item(inv, nm, 1)
-                                        apply_xp_delta(get_player(pname), craft_prof, xp_gain)
-                                        save_player_now(pname)
-                                        st.rerun()
+                                    # Require an in-game roll (total).
+                                    roll_total = st.number_input("Craft roll total", min_value=0, step=1, key=f"craft_roll_{pname}_{r['id']}")
+                                    st.caption(f"DC {dc_for_tier(int(r.get('tier',1)), craft_unlocked_tier)} • Time: {fmt_seconds(int(TIMER_CRAFT_SEC.get(int(r.get('tier',1)), 60)))}")
+                                
                                 with right:
+                                    show_recipe_details(r)
+                                    can, missing = recipe_is_craftable(inv, r)
                                     if not can:
-                                        missing = []
-                                        for c in r.get("components", []):
-                                            cname = canon_name(c.get("name", ""))
-                                            need = int(c.get("qty", 1))
-                                            have = int(inv.get(cname, 0))
-                                            if have < need:
-                                                missing.append(f"{cname} ({have}/{need})")
-                                        if missing:
-                                            st.caption("Missing: " + ", ".join(missing))
+                                        st.caption("Missing: " + ", ".join(missing))
+                                    busy = active_job(pname) is not None
+                                    disabled = (not can) or busy or roll_total <= 0
+                                    if st.button(f"Craft", key=f"craft_{pname}_{r['id']}", disabled=disabled):
+                                        push_undo(pname, f"Craft attempt: {r.get('name')}")
+                                        # Consume mats immediately (success or fail). No XP on failure.
+                                        consume_recipe_mats(inv, r)
+                                        tier = int(r.get("tier", 1))
+                                        dc = dc_for_tier(tier, craft_unlocked_tier)
+                                        timer_sec = int(TIMER_CRAFT_SEC.get(tier, 60))
+                                        success = bool(int(roll_total) >= dc)
+                                        msg = ""
+                                        if success:
+                                            msg = f"Crafting underway... (DC {dc})"
+                                        else:
+                                            if int(roll_total) < dc - 5:
+                                                msg = "Crafting failed. You’re not sure the technique was right."
+                                            else:
+                                                msg = "Crafting failed, but you feel you were close."
+                                        job = {
+                                            "type": "craft",
+                                            "profession": craft_prof,
+                                            "recipe_id": r.get("id"),
+                                            "success": success,
+                                            "xp_gain": int(crafting_xp_from_components(r) if success else 0),
+                                            "result_msg": msg,
+                                            "ends_at": int(now_ts() + timer_sec),
+                                            "tier": tier,
+                                        }
+                                        if start_job(pname, job):
+                                            st.info(f"⏳ Craft started (T{tier}). Time remaining: {fmt_seconds(timer_sec)}")
+                                            save_player_now(pname)
+                                            st.rerun()
                                 st.divider()
 
         # ---- Vendor ----
@@ -935,7 +1166,7 @@ for idx, player in enumerate(st.session_state.players):
                         t = safe_int(line.get("tier", 1), 1)
                         qty = safe_int(line.get("qty", 1), 1)
                         unit = safe_float(line.get("unit_price", 0), 0.0)
-                        total = safe_float(line.get("total_price", unit * qty), unit * qty)
+                        total = unit * qty
 
                         unit_disp = f"{safe_int(unit)} gp" if unit > 0 else "—"
                         total_disp = f"{safe_int(total)} gp" if total > 0 else "—"
@@ -948,9 +1179,26 @@ for idx, player in enumerate(st.session_state.players):
 
                         b1, _ = st.columns([2, 6])
                         with b1:
+                            # Buy purchases 1 unit at a time and decrements the vendor stock.
                             if st.button("Buy", key=f"{pname}-vendor-buy-{i}-{nm}"):
-                                push_undo(pname, f"Vendor buy {nm} x{qty}")
-                                add_item(inv, nm, qty)
+                                if qty <= 0:
+                                    st.warning("Out of stock.")
+                                    st.rerun()
+
+                                push_undo(pname, f"Vendor buy {nm} x1")
+                                add_item(inv, nm, 1)
+
+                                # Decrement remaining stock for this line
+                                offer = st.session_state.vendor_offers.get(pname, {})
+                                lines2 = list(offer.get("lines", []) or [])
+                                if 0 <= i < len(lines2):
+                                    lines2[i]["qty"] = max(0, safe_int(lines2[i].get("qty", 1), 1) - 1)
+
+                                # Remove any lines that hit 0
+                                lines2 = [ln for ln in lines2 if safe_int(ln.get("qty", 0), 0) > 0]
+                                offer["lines"] = lines2
+                                st.session_state.vendor_offers[pname] = offer
+
                                 save_player_now(pname)
                                 st.rerun()
                         st.divider()
