@@ -381,7 +381,7 @@ def sb_bootstrap():
 
         # activity log
         st.session_state.activity_log.setdefault(pname, [])
-        lg = (state.get('activity_log') if isinstance(state, dict) else None) or []
+        lg = saved.get('activity_log', [])
         if isinstance(lg, list):
             st.session_state.activity_log[pname] = lg
 
