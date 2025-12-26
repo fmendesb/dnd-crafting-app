@@ -1,0 +1,67 @@
+[
+  {
+    "name": "Serapine",
+    "skills": {
+      "Mining": {
+        "level": 1,
+        "xp": 2.0
+      },
+      "Blacksmithing": {
+        "level": 1,
+        "xp": 0.0
+      }
+    }
+  },
+  {
+    "name": "Cadrie",
+    "skills": {
+      "Woodcrafter": {
+        "level": 1,
+        "xp": 1.0
+      },
+      "Cooking": {
+        "level": 1,
+        "xp": 0.0
+      }
+    }
+  },
+  {
+    "name": "Val",
+    "skills": {
+      "Hunting": {
+        "level": 1,
+        "xp": 1.0
+      },
+      "Tailoring": {
+        "level": 1,
+        "xp": 0.0
+      }
+    }
+  },
+  {
+    "name": "Djinn",
+    "skills": {
+      "Herbalism": {
+        "level": 1,
+        "xp": 3.0
+      },
+      "Scribing": {
+        "level": 1,
+        "xp": 0.0
+      }
+    }
+  },
+  {
+    "name": "Ashur",
+    "skills": {
+      "Arcana Extraction": {
+        "level": 1,
+        "xp": 2.0
+      },
+      "Enchanting": {
+        "level": 1,
+        "xp": 1.0
+      }
+    }
+  }
+]
