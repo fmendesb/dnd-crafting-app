@@ -1004,8 +1004,10 @@ for idx, player in enumerate(st.session_state.players):
                                 m = TIER_SUFFIX_RE.search(str(_nm))
                                 chosen_tiers.append(int(m.group(1)) if m else 1)
                             max_chosen = max(chosen_tiers) if chosen_tiers else 1
-                            target_tier = int(recipe.get("tier", max_chosen)) if recipe else min(7, max_chosen)
-                            target_tier = min(7, max(1, target_tier))
+                            min_chosen = min(chosen_tiers) if chosen_tiers else 1
+
+                            # Mixed-tier discovery crafts at the LOWEST tier used (and timer uses the same tier)
+                            target_tier = min(7, max(1, min_chosen))
                             
                             dc = dc_for_tier(target_tier, unlocked)
                             timer_sec = int(TIMER_DISCOVER_SEC.get(target_tier, 60))
