@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from collections import defaultdict
+from collections import defaultdict, Counter
 from typing import Dict, Any, List, Optional, Tuple
 import copy
 import random
@@ -512,16 +512,21 @@ def get_jobs(pname: str) -> List[Dict[str, Any]]:
         st.session_state.jobs[pname] = []
     return st.session_state.jobs[pname]
 
-def add_notice(pname: str, msg: str):
-    """Persist a user-facing message for this player (shown once, also kept in Activity Log)."""
+def add_notice(pname: str, msg: str, *, kind: str = "note", items: Optional[List[str]] = None):
+    """Persist a user-facing message for this player (shown once, also kept in Activity Log).
+
+    kind: short tag like "discover", "craft", "vendor", "gather".
+    items: optional list of item names involved (shown in Activity Log).
+    """
     msg = str(msg)
     st.session_state.notices.setdefault(pname, []).append(msg)
 
-    # Keep an activity log the player can read later (helps when timers finish while they're away)
     st.session_state.activity_log.setdefault(pname, [])
-    st.session_state.activity_log[pname].append({"ts": now_ts(), "msg": msg})
-    st.session_state.activity_log[pname] = st.session_state.activity_log[pname][-80:]  # cap
-
+    entry = {"ts": now_ts(), "kind": kind, "msg": msg}
+    if items:
+        entry["items"] = [canon_name(x) for x in items if x]
+    st.session_state.activity_log[pname].append(entry)
+    st.session_state.activity_log[pname] = st.session_state.activity_log[pname][-120:]  # cap
 def pop_notices(pname: str) -> List[str]:
     """Return only the notices that haven't been shown yet this session."""
     st.session_state.notice_cursor = st.session_state.get("notice_cursor", {})
@@ -565,9 +570,9 @@ def complete_job(pname: str, job: Dict[str, Any]):
             xp_gain = int(job.get("xp_gain", 0))
             if xp_gain > 0:
                 apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
-            add_notice(pname, f"✅ You discovered **{r.get('name')}** and crafted 1!")
+            add_notice(pname, f"✅ You discovered **{r.get('name')}** and crafted 1!", kind="discover", items=job.get("items"))
         else:
-            add_notice(pname, str(job.get("result_msg", "Discovery finished.")))
+            add_notice(pname, str(job.get("result_msg", "Discovery finished.")), kind="discover", items=job.get("items"))
 
     elif jtype == "craft":
         rid = job.get("recipe_id")
@@ -577,9 +582,9 @@ def complete_job(pname: str, job: Dict[str, Any]):
             xp_gain = int(job.get("xp_gain", 0))
             if xp_gain > 0:
                 apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
-            add_notice(pname, f"✅ Crafted 1 × **{r.get('name')}**!")
+            add_notice(pname, f"✅ Crafted 1 × **{r.get('name')}**!", kind="craft", items=job.get("items"))
         else:
-            add_notice(pname, str(job.get("result_msg", "Crafting finished.")))
+            add_notice(pname, str(job.get("result_msg", "Crafting finished.")), kind="craft", items=job.get("items"))
 
     job["done"] = True
     save_player_now(pname)
@@ -607,30 +612,68 @@ def dc_for_tier(recipe_tier: int, player_tier: int) -> int:
     return max(5, base)
 
 def discovery_hint_for_pair(craft_prof: str, chosen: list, unlocked_tier: int) -> str:
-    """If two of the three items match a recipe, hint what kind of third item to try."""
-    chosen_bases = [base_name(canon_name(x)) for x in chosen]
-    # Look through recipes for this profession that are 'near' the player's tier window.
-    candidates = [r for r in RECIPES if canon_name(r.get("profession","")) == canon_name(craft_prof)]
-    candidates = [r for r in candidates if int(r.get("tier", 1)) <= int(unlocked_tier) + 2]
-    # Build base-name sets for each recipe
-    for i in range(3):
-        for j in range(i+1, 3):
-            pair = {chosen_bases[i], chosen_bases[j]}
-            for r in candidates:
-                comps = [base_name(canon_name(c.get("name",""))) for c in r.get("components", [])]
-                if len(comps) != 3:
-                    continue
-                comp_set = set(comps)
-                if pair.issubset(comp_set):
-                    remaining = list(comp_set - pair)
-                    if remaining:
-                        # Return a friendly hint
-                        return f"Your roll suggests **{chosen[i]}** and **{chosen[j]}** belong together. Try pairing them with something like **{remaining[0]} (any tier)**."
-    return ""
+    """If two of the three items match a recipe, hint which two and what third to try.
 
-# -----------------------------
-# Automated Gathering
-# -----------------------------
+    Uses multiset matching (so recipes that require the same component twice work correctly).
+    """
+    chosen_bases = [base_name(canon_name(x)) for x in chosen if x]
+    if len(chosen_bases) != 3:
+        return ""
+    chosen_ctr = Counter(chosen_bases)
+
+    # Candidate recipes in the player’s visibility window
+    candidates = [r for r in RECIPES if canon_prof(r.get("profession", "")) == canon_prof(craft_prof)]
+    candidates = [r for r in candidates if int(r.get("tier", 1)) <= int(unlocked_tier) + 2]
+
+    best = None
+    best_overlap = 0
+    best_missing = ""
+    best_pair = []
+
+    for r in candidates:
+        comps = [base_name(canon_name(c.get("name", ""))) for c in r.get("components", [])]
+        if len(comps) != 3:
+            continue
+        r_ctr = Counter(comps)
+        overlap = sum(min(chosen_ctr[k], r_ctr[k]) for k in r_ctr)
+        # We only hint when at least 2 components align, but the full recipe is not correct
+        if overlap < 2:
+            continue
+        if overlap == 3 and all(chosen_ctr[k] == r_ctr[k] for k in set(list(chosen_ctr.keys()) + list(r_ctr.keys()))):
+            continue
+
+        # Determine the missing component (the one where chosen has fewer than recipe requires)
+        missing = ""
+        for k, need in r_ctr.items():
+            if chosen_ctr.get(k, 0) < need:
+                missing = k
+                break
+        if not missing:
+            continue
+
+        # Determine which two components of the recipe are matched (respecting duplicate requirements)
+        matched = []
+        tmp = chosen_ctr.copy()
+        for k, need in r_ctr.items():
+            take = min(tmp.get(k, 0), need)
+            for _ in range(take):
+                if len(matched) < 2:
+                    matched.append(k)
+            if k in tmp:
+                tmp[k] = max(0, tmp[k] - take)
+        if len(matched) < 2:
+            continue
+
+        if overlap > best_overlap:
+            best_overlap = overlap
+            best = r
+            best_missing = missing
+            best_pair = matched[:2]
+
+    if best and best_pair and best_missing:
+        a, b = best_pair[0], best_pair[1]
+        return f"Try pairing **{a}** + **{b}** with something like **{best_missing} (any tier)**."
+    return ""
 def gathered_tier_from_roll(unlocked_tier: int, roll_total: int) -> Optional[int]:
     if unlocked_tier == 1 and roll_total < 10:
         return None
@@ -832,7 +875,12 @@ for idx, player in enumerate(st.session_state.players):
             else:
                 for entry in reversed(log[-25:]):
                     ts = datetime.datetime.fromtimestamp(int(entry.get("ts", 0))).strftime("%Y-%m-%d %H:%M:%S")
-                    st.write(f"- **{ts}**: {entry.get('msg','')}")
+                    kind = entry.get("kind", "")
+                    ktag = f" [{kind}]" if kind and kind != "note" else ""
+                    st.write(f"- **{ts}**{ktag}: {entry.get('msg', '')}")
+                    it = entry.get("items") or []
+                    if it:
+                        st.caption("Items: " + ", ".join([str(x) for x in it]))
 
         _job = active_job(pname)
         if _job:
@@ -1094,6 +1142,9 @@ for idx, player in enumerate(st.session_state.players):
                             job = {
                                 "type": "discover",
                                 "profession": craft_prof,
+                                "items": chosen,
+                                "roll_total": int(roll_total),
+                                "dc": int(dc),
                                 "recipe_id": rid,
                                 "success": bool(success),
                                 "xp_gain": int(crafting_xp_from_components(recipe) if (success and recipe) else 0),
