@@ -1330,71 +1330,75 @@ for idx, player in enumerate(st.session_state.players):
                                         st.caption(f"Use: {r['use']}")
 
                                 left, right = st.columns([2, 6])
-with left:
-    # Require an in-game roll (total).
-    roll_total = st.number_input(
-        "Craft roll total",
-        min_value=0,
-        step=1,
-        key=f"craft_roll_{pname}_{r['id']}"
-    )
+                                with left:
+                                    # Require an in-game roll (total).
+                                    roll_total = st.number_input(
+                                        "Craft roll total",
+                                        min_value=0,
+                                        step=1,
+                                        key=f"craft_roll_{pname}_{r['id']}"
+                                    )
 
-    # Quantity (bounded by what inventory supports)
-    max_q = max(1, int(craftable_n or 1))
-    craft_qty = st.number_input(
-        "Quantity",
-        min_value=1,
-        max_value=max_q,
-        step=1,
-        value=1,
-        key=f"craft_qty_{pname}_{r['id']}"
-    )
+                                    # Quantity (bounded by what inventory supports)
+                                    max_q = max(1, int(craftable_n or 1))
+                                    craft_qty = st.number_input(
+                                        "Quantity",
+                                        min_value=1,
+                                        max_value=max_q,
+                                        step=1,
+                                        value=1,
+                                        key=f"craft_qty_{pname}_{r['id']}"
+                                    )
 
-    tier = int(r.get('tier', 1) or 1)
-    dc_eff = dc_for_tier(tier, unlocked)
-    timer_sec = int(TIMER_CRAFT_SEC.get(tier, 60))
+                                    tier = int(r.get("tier", 1) or 1)
+                                    dc_eff = dc_for_tier(tier, unlocked)
+                                    timer_sec = int(TIMER_CRAFT_SEC.get(tier, 60))
 
-    st.caption(f"DC {dc_eff} • Time: {fmt_seconds(timer_sec)}")
+                                    st.caption(f"DC {dc_eff} • Time: {fmt_seconds(timer_sec)}")
 
-    busy = active_job(pname) is not None
-    disabled = (craftable_n <= 0) or busy or roll_total <= 0
+                                    busy = active_job(pname) is not None
+                                    disabled = (craftable_n <= 0) or busy or roll_total <= 0
 
-    if st.button("Craft", key=f"craft_btn_{pname}_{r['id']}", disabled=disabled):
-        push_undo(pname, f"Craft attempt ({r.get('name')})")
-        # Consume immediately (success or fail), consistent with your design.
-        consume_recipe_mats(inv, r, times=int(craft_qty))
+                                    if st.button("Craft", key=f"craft_btn_{pname}_{r['id']}", disabled=disabled):
+                                        push_undo(pname, f"Craft attempt ({r.get('name')})")
 
-        success = int(roll_total) >= int(dc_eff)
-        xp_per = int(crafting_xp_from_components(r))
-        xp_gain = int(xp_per * int(craft_qty)) if success else 0
+                                        # Consume immediately (success or fail), consistent with your design.
+                                        consume_recipe_mats(inv, r, times=int(craft_qty))
 
-        if success:
-            msg = f"Crafting underway... (DC {dc_eff})"
-        else:
-            if int(roll_total) < int(dc_eff) - 5:
-                msg = "The work falls apart early. The materials are spent."
-            else:
-                msg = "So close... but the craft fails at the last moment. The materials are spent."
+                                        success = int(roll_total) >= int(dc_eff)
+                                        xp_per = int(crafting_xp_from_components(r))
+                                        xp_gain = int(xp_per * int(craft_qty)) if success else 0
 
-        job = {
-            "type": "craft",
-            "profession": craft_prof,
-            "recipe_id": r.get("id"),
-            "items": [canon_name(c.get("name","")) for c in (r.get("components") or [])],
-            "roll_total": int(roll_total),
-            "dc": int(dc_eff),
-            "success": bool(success),
-            "xp_gain": int(xp_gain),
-            "result_msg": msg,
-            "ends_at": int(now_ts() + timer_sec),
-            "tier": int(tier),
-            "craft_qty": int(craft_qty),
-            "output_qty": int(r.get("output_qty", 1) or 1) * int(craft_qty),
-        }
+                                        if success:
+                                            msg = f"Crafting underway... (DC {dc_eff})"
+                                        else:
+                                            if int(roll_total) < int(dc_eff) - 5:
+                                                msg = "The work falls apart early. The materials are spent."
+                                            else:
+                                                msg = "So close... but the craft fails at the last moment. The materials are spent."
 
-        if start_job(pname, job):
-            st.info(f"⏳ Craft started (T{tier}). Time remaining: {fmt_seconds(timer_sec)}")
-            save_player_now(pname)
-            st.rerun()
+                                        job = {
+                                            "type": "craft",
+                                            "profession": craft_prof,
+                                            "recipe_id": r.get("id"),
+                                            "items": [canon_name(c.get("name","")) for c in (r.get("components") or [])],
+                                            "roll_total": int(roll_total),
+                                            "dc": int(dc_eff),
+                                            "success": bool(success),
+                                            "xp_gain": int(xp_gain),
+                                            "result_msg": msg,
+                                            "ends_at": int(now_ts() + timer_sec),
+                                            "tier": int(tier),
+                                            "craft_qty": int(craft_qty),
+                                            "output_qty": int(r.get("output_qty", 1) or 1) * int(craft_qty),
+                                        }
+
+                                        if start_job(pname, job):
+                                            st.info(f"⏳ Craft started (T{tier}). Time remaining: {fmt_seconds(timer_sec)}")
+                                            save_player_now(pname)
+                                            st.rerun()
+
+                                with right:
+                                    st.caption("")
 
 
