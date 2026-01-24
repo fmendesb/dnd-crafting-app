@@ -609,14 +609,14 @@ def complete_job(pname: str, job: Dict[str, Any]):
         rid = job.get("recipe_id")
         if job.get("success") and rid in recipes_by_id:
             r = recipes_by_id[rid]
-                        out_qty = int(job.get("output_qty", 0) or 0)
+            out_qty = int(job.get("output_qty", 0) or 0)
             if out_qty <= 0:
                 out_qty = int(r.get("output_qty", 1) or 1)
             add_item(inv, canon_name(r.get("name", "")), out_qty)
             xp_gain = int(job.get("xp_gain", 0))
             if xp_gain > 0:
                 apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
-                        add_notice(pname, f"✅ Crafted {out_qty} × **{r.get('name')}**!", kind="craft", items=job.get("items"))
+            add_notice(pname, f"✅ Crafted {out_qty} × **{r.get('name')}**!", kind="craft", items=job.get("items"))
         else:
             add_notice(pname, str(job.get("result_msg", "Crafting finished.")), kind="craft", items=job.get("items"))
 
