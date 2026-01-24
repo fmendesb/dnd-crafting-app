@@ -15,8 +15,8 @@ try:
     from supabase import create_client, Client  # type: ignore
 except Exception:
     create_client = None
-    Client = None  # type: ignore
 
+    Client = None  # type: ignore
 st.set_page_config(page_title="D&D Crafting Simulator", layout="wide")
 DATA_DIR = Path(__file__).parent / "data"
 
@@ -997,6 +997,7 @@ for idx, player in enumerate(st.session_state.players):
                         st.write(f"Qty: **{qty}**")
                         st.caption(f"Sell: **{sell} gp**")
                     with right:
+                                    st.caption('')
                         bminus, bplus = st.columns(2)
                         with bminus:
                             if st.button("−", key=f"{pname}-inv-{nm}-minus"):
@@ -1239,42 +1240,7 @@ for idx, player in enumerate(st.session_state.players):
                                     st.caption(f"DC {dc_for_tier(int(r.get('tier',1)), unlocked)} • Time: {fmt_seconds(int(TIMER_CRAFT_SEC.get(int(r.get('tier',1)), 60)))}")
                                 
                                 with right:
-                                    show_recipe_details(r)
-                                    can, missing = recipe_is_craftable(inv, r)
-                                    if not can:
-                                        st.caption("Missing: " + ", ".join(missing))
-                                    busy = active_job(pname) is not None
-                                    disabled = (not can) or busy or roll_total <= 0
-                                    if st.button(f"Craft", key=f"craft_{pname}_{r['id']}", disabled=disabled):
-                                        push_undo(pname, f"Craft attempt: {r.get('name')}")
-                                        # Consume mats immediately (success or fail). No XP on failure.
-                                        consume_recipe_mats(inv, r)
-                                        tier = int(r.get("tier", 1))
-                                        dc = dc_for_tier(tier, unlocked)
-                                        timer_sec = int(TIMER_CRAFT_SEC.get(tier, 60))
-                                        success = bool(int(roll_total) >= dc)
-                                        msg = ""
-                                        if success:
-                                            msg = f"Crafting underway... (DC {dc})"
-                                        else:
-                                            if int(roll_total) < dc - 5:
-                                                msg = "Crafting failed. You’re not sure the technique was right."
-                                            else:
-                                                msg = "Crafting failed, but you feel you were close."
-                                        job = {
-                                            "type": "craft",
-                                            "profession": craft_prof,
-                                            "recipe_id": r.get("id"),
-                                            "success": success,
-                                            "xp_gain": int(crafting_xp_from_components(r) if success else 0),
-                                            "result_msg": msg,
-                                            "ends_at": int(now_ts() + timer_sec),
-                                            "tier": tier,
-                                        }
-                                        if start_job(pname, job):
-                                            st.info(f"⏳ Craft started (T{tier}). Time remaining: {fmt_seconds(timer_sec)}")
-                                            save_player_now(pname)
-                                            st.rerun()
+                                    st.caption('')
                                 st.divider()
 
         # ---- Vendor ----
