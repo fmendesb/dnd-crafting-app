@@ -477,6 +477,16 @@ def can_craft(inv: Dict[str, int], recipe: Dict[str, Any]) -> bool:
             return False
     return True
 
+def consume_recipe_mats(inv: Dict[str, int], recipe: Dict[str, Any], times: int = 1):
+    """Consume recipe components from inventory. Assumes craftability was checked."""
+    times = max(1, int(times))
+    for _ in range(times):
+        for c in recipe.get("components", []) or []:
+            nm = canon_name(c.get("name", ""))
+            need = int(c.get("qty", 1) or 1)
+            remove_item(inv, nm, need)
+
+
 
 def crafting_xp_from_components(recipe: Dict[str, Any]) -> int:
     """XP awarded on a successful craft/discovery.
@@ -599,11 +609,14 @@ def complete_job(pname: str, job: Dict[str, Any]):
         rid = job.get("recipe_id")
         if job.get("success") and rid in recipes_by_id:
             r = recipes_by_id[rid]
-            add_item(inv, canon_name(r.get("name", "")), 1)
+                        out_qty = int(job.get("output_qty", 0) or 0)
+            if out_qty <= 0:
+                out_qty = int(r.get("output_qty", 1) or 1)
+            add_item(inv, canon_name(r.get("name", "")), out_qty)
             xp_gain = int(job.get("xp_gain", 0))
             if xp_gain > 0:
                 apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
-            add_notice(pname, f"✅ Crafted 1 × **{r.get('name')}**!", kind="craft", items=job.get("items"))
+                        add_notice(pname, f"✅ Crafted {out_qty} × **{r.get('name')}**!", kind="craft", items=job.get("items"))
         else:
             add_notice(pname, str(job.get("result_msg", "Crafting finished.")), kind="craft", items=job.get("items"))
 
@@ -1233,14 +1246,76 @@ for idx, player in enumerate(st.session_state.players):
                                         st.caption(f"Use: {r['use']}")
 
                                 left, right = st.columns([2, 6])
-                                with left:
-                                    # Require an in-game roll (total).
-                                    roll_total = st.number_input("Craft roll total", min_value=0, step=1, key=f"craft_roll_{pname}_{r['id']}")
-                                    st.caption(f"DC {dc_for_tier(int(r.get('tier',1)), unlocked)} • Time: {fmt_seconds(int(TIMER_CRAFT_SEC.get(int(r.get('tier',1)), 60)))}")
-                                
-                                with right:
-                                    st.caption('')
-                                st.divider()
+with left:
+    # Require an in-game roll (total).
+    roll_total = st.number_input(
+        "Craft roll total",
+        min_value=0,
+        step=1,
+        key=f"craft_roll_{pname}_{r['id']}"
+    )
+
+    # Quantity (bounded by what inventory supports)
+    max_q = max(1, int(craftable_n or 1))
+    craft_qty = st.number_input(
+        "Quantity",
+        min_value=1,
+        max_value=max_q,
+        step=1,
+        value=1,
+        key=f"craft_qty_{pname}_{r['id']}"
+    )
+
+    tier = int(r.get('tier', 1) or 1)
+    dc_eff = dc_for_tier(tier, unlocked)
+    timer_sec = int(TIMER_CRAFT_SEC.get(tier, 60))
+
+    st.caption(f"DC {dc_eff} • Time: {fmt_seconds(timer_sec)}")
+
+    busy = active_job(pname) is not None
+    disabled = (craftable_n <= 0) or busy or roll_total <= 0
+
+    if st.button("Craft", key=f"craft_btn_{pname}_{r['id']}", disabled=disabled):
+        push_undo(pname, f"Craft attempt ({r.get('name')})")
+        # Consume immediately (success or fail), consistent with your design.
+        consume_recipe_mats(inv, r, times=int(craft_qty))
+
+        success = int(roll_total) >= int(dc_eff)
+        xp_per = int(crafting_xp_from_components(r))
+        xp_gain = int(xp_per * int(craft_qty)) if success else 0
+
+        if success:
+            msg = f"Crafting underway... (DC {dc_eff})"
+        else:
+            if int(roll_total) < int(dc_eff) - 5:
+                msg = "The work falls apart early. The materials are spent."
+            else:
+                msg = "So close... but the craft fails at the last moment. The materials are spent."
+
+        job = {
+            "type": "craft",
+            "profession": craft_prof,
+            "recipe_id": r.get("id"),
+            "items": [canon_name(c.get("name","")) for c in (r.get("components") or [])],
+            "roll_total": int(roll_total),
+            "dc": int(dc_eff),
+            "success": bool(success),
+            "xp_gain": int(xp_gain),
+            "result_msg": msg,
+            "ends_at": int(now_ts() + timer_sec),
+            "tier": int(tier),
+            "craft_qty": int(craft_qty),
+            "output_qty": int(r.get("output_qty", 1) or 1) * int(craft_qty),
+        }
+
+        if start_job(pname, job):
+            st.info(f"⏳ Craft started (T{tier}). Time remaining: {fmt_seconds(timer_sec)}")
+            save_player_now(pname)
+            st.rerun()
+
+with right:
+    st.caption("")
+st.divider()
 
         # ---- Vendor ----
         with st.expander("🧾 Vendor", expanded=False):
