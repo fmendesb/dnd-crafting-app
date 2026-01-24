@@ -1112,6 +1112,75 @@ for idx, player in enumerate(st.session_state.players):
                                 save_player_now(pname)
                                 st.rerun()
 
+        # ---- Vendor ----
+        with st.expander("🧾 Vendor", expanded=False):
+            prof_options = []
+            if gathering_prof:
+                prof_options.append(gathering_prof)
+            prof_options.extend(crafting_profs)
+
+            if not prof_options:
+                st.caption("No professions available for vendor.")
+            else:
+                chosen_prof = st.selectbox("Shop type (your professions)", prof_options, key=f"{pname}-vendor-prof")
+                st.caption("If you pick a crafting profession, the vendor sells ONLY components used by that craft.")
+                st.caption("Per visit: 0–3 items, max 4 qty each. Vendor never sells above **T+2**.")
+
+                if st.button("Generate vendor stock", key=f"{pname}-vendor-roll"):
+                    push_undo(pname, f"Vendor roll ({chosen_prof})")
+                    lines = generate_vendor_stock_for_prof(get_player(pname), chosen_prof)
+                    st.session_state.vendor_offers[pname] = {"profession": chosen_prof, "lines": lines}
+                    st.rerun()
+
+                offer = st.session_state.vendor_offers.get(pname)
+                if offer is None:
+                    st.caption("No vendor stock yet. Click “Generate vendor stock”.")
+                else:
+                    st.markdown(f"**Vendor stock for:** {offer.get('profession')}")
+                    lines = offer.get("lines", []) or []
+                    if not lines:
+                        st.info("This vendor has nothing useful right now.")
+                    for i, line in enumerate(lines):
+                        nm = canon_name(line.get("name", ""))
+                        t = safe_int(line.get("tier", 1), 1)
+                        qty = safe_int(line.get("qty", 1), 1)
+                        unit = safe_float(line.get("unit_price", 0), 0.0)
+                        total = unit * qty
+
+                        unit_disp = f"{safe_int(unit)} gp" if unit > 0 else "—"
+                        total_disp = f"{safe_int(total)} gp" if total > 0 else "—"
+
+                        st.write(
+                            f"**{nm}** ({tier_badge_html(line.get('unlocked_tier', 99), t)}) • "
+                            f"Qty: **{qty}** • Unit: **{unit_disp}** • Total: **{total_disp}**",
+                            unsafe_allow_html=True
+                        )
+
+                        b1, _ = st.columns([2, 6])
+                        with b1:
+                            # Buy purchases 1 unit at a time and decrements the vendor stock.
+                            if st.button("Buy", key=f"{pname}-vendor-buy-{i}-{nm}"):
+                                if qty <= 0:
+                                    st.warning("Out of stock.")
+                                    st.rerun()
+
+                                push_undo(pname, f"Vendor buy {nm} x1")
+                                add_item(inv, nm, 1)
+
+                                # Decrement remaining stock for this line
+                                offer = st.session_state.vendor_offers.get(pname, {})
+                                lines2 = list(offer.get("lines", []) or [])
+                                if 0 <= i < len(lines2):
+                                    lines2[i]["qty"] = max(0, safe_int(lines2[i].get("qty", 1), 1) - 1)
+
+                                # Remove any lines that hit 0
+                                lines2 = [ln for ln in lines2 if safe_int(ln.get("qty", 0), 0) > 0]
+                                offer["lines"] = lines2
+                                st.session_state.vendor_offers[pname] = offer
+
+                                save_player_now(pname)
+                                st.rerun()
+                        st.divider()
         # ---- Crafting ----
         with st.expander("🧪 Crafting", expanded=False):
             if not crafting_profs:
@@ -1329,72 +1398,3 @@ with left:
             st.rerun()
 
 
-        # ---- Vendor ----
-        with st.expander("🧾 Vendor", expanded=False):
-            prof_options = []
-            if gathering_prof:
-                prof_options.append(gathering_prof)
-            prof_options.extend(crafting_profs)
-
-            if not prof_options:
-                st.caption("No professions available for vendor.")
-            else:
-                chosen_prof = st.selectbox("Shop type (your professions)", prof_options, key=f"{pname}-vendor-prof")
-                st.caption("If you pick a crafting profession, the vendor sells ONLY components used by that craft.")
-                st.caption("Per visit: 0–3 items, max 4 qty each. Vendor never sells above **T+2**.")
-
-                if st.button("Generate vendor stock", key=f"{pname}-vendor-roll"):
-                    push_undo(pname, f"Vendor roll ({chosen_prof})")
-                    lines = generate_vendor_stock_for_prof(get_player(pname), chosen_prof)
-                    st.session_state.vendor_offers[pname] = {"profession": chosen_prof, "lines": lines}
-                    st.rerun()
-
-                offer = st.session_state.vendor_offers.get(pname)
-                if offer is None:
-                    st.caption("No vendor stock yet. Click “Generate vendor stock”.")
-                else:
-                    st.markdown(f"**Vendor stock for:** {offer.get('profession')}")
-                    lines = offer.get("lines", []) or []
-                    if not lines:
-                        st.info("This vendor has nothing useful right now.")
-                    for i, line in enumerate(lines):
-                        nm = canon_name(line.get("name", ""))
-                        t = safe_int(line.get("tier", 1), 1)
-                        qty = safe_int(line.get("qty", 1), 1)
-                        unit = safe_float(line.get("unit_price", 0), 0.0)
-                        total = unit * qty
-
-                        unit_disp = f"{safe_int(unit)} gp" if unit > 0 else "—"
-                        total_disp = f"{safe_int(total)} gp" if total > 0 else "—"
-
-                        st.write(
-                            f"**{nm}** ({tier_badge_html(line.get('unlocked_tier', 99), t)}) • "
-                            f"Qty: **{qty}** • Unit: **{unit_disp}** • Total: **{total_disp}**",
-                            unsafe_allow_html=True
-                        )
-
-                        b1, _ = st.columns([2, 6])
-                        with b1:
-                            # Buy purchases 1 unit at a time and decrements the vendor stock.
-                            if st.button("Buy", key=f"{pname}-vendor-buy-{i}-{nm}"):
-                                if qty <= 0:
-                                    st.warning("Out of stock.")
-                                    st.rerun()
-
-                                push_undo(pname, f"Vendor buy {nm} x1")
-                                add_item(inv, nm, 1)
-
-                                # Decrement remaining stock for this line
-                                offer = st.session_state.vendor_offers.get(pname, {})
-                                lines2 = list(offer.get("lines", []) or [])
-                                if 0 <= i < len(lines2):
-                                    lines2[i]["qty"] = max(0, safe_int(lines2[i].get("qty", 1), 1) - 1)
-
-                                # Remove any lines that hit 0
-                                lines2 = [ln for ln in lines2 if safe_int(ln.get("qty", 0), 0) > 0]
-                                offer["lines"] = lines2
-                                st.session_state.vendor_offers[pname] = offer
-
-                                save_player_now(pname)
-                                st.rerun()
-                        st.divider()
