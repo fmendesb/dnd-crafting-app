@@ -15,8 +15,8 @@ try:
     from supabase import create_client, Client  # type: ignore
 except Exception:
     create_client = None
-
     Client = None  # type: ignore
+
 st.set_page_config(page_title="D&D Crafting Simulator", layout="wide")
 DATA_DIR = Path(__file__).parent / "data"
 
