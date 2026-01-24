@@ -1009,9 +1009,8 @@ for idx, player in enumerate(st.session_state.players):
                     with mid:
                         st.write(f"Qty: **{qty}**")
                         st.caption(f"Sell: **{sell} gp**")
-                    with right:
-                        st.caption("")
-                        bminus, bplus = st.columns(2)
+                                        with right:
+                        bminus, bplus, _sp = st.columns([1, 1, 6])
                         with bminus:
                             if st.button("−", key=f"{pname}-inv-{nm}-minus"):
                                 push_undo(pname, f"Inventory −1 ({nm})")
@@ -1019,27 +1018,44 @@ for idx, player in enumerate(st.session_state.players):
                                 save_player_now(pname)
                                 st.rerun()
                         with bplus:
-                            if st.button("+", key=f"{pname}-inv-{nm}-plus"):
+                            # Full-width plus renders more reliably than "+" in some fonts
+                            if st.button("＋", key=f"{pname}-inv-{nm}-plus"):
                                 push_undo(pname, f"Inventory +1 ({nm})")
                                 add_item(inv, nm, 1)
                                 save_player_now(pname)
                                 st.rerun()
 
-                        st.markdown("**Send to another player**")
                         other_players = [pp.get("name") for pp in st.session_state.players if pp.get("name") and pp.get("name") != pname]
                         if other_players:
-                            to_player = st.selectbox("Recipient", other_players, key=f"{pname}-send-to-{nm}")
-                            send_qty = st.number_input("Amount", min_value=1, max_value=int(qty), value=1, step=1, key=f"{pname}-send-qty-{nm}")
-                            if st.button("Send", key=f"{pname}-send-btn-{nm}"):
-                                push_undo(pname, f"Send {int(send_qty)}x {nm} → {to_player}")
-                                remove_item(inv, nm, int(send_qty))
-                                recv_inv = st.session_state.inventories[to_player]
-                                add_item(recv_inv, nm, int(send_qty))
-                                save_player_now(pname)
-                                save_player_now(to_player)
-                                add_notice(pname, f"Sent {int(send_qty)}× {nm} to {to_player}.", kind="trade", items=[nm])
-                                add_notice(to_player, f"Received {int(send_qty)}× {nm} from {pname}.", kind="trade", items=[nm])
-                                st.rerun()
+                            # Keep inventory rows compact: use a popover for sending (fallback to expander if unavailable)
+                            try:
+                                with st.popover("Send"):
+                                    to_player = st.selectbox("Recipient", other_players, key=f"{pname}-send-to-{nm}")
+                                    send_qty = st.number_input("Amount", min_value=1, max_value=int(qty), value=1, step=1, key=f"{pname}-send-qty-{nm}")
+                                    if st.button("Send", key=f"{pname}-send-btn-{nm}"):
+                                        push_undo(pname, f"Send {int(send_qty)}x {nm} → {to_player}")
+                                        remove_item(inv, nm, int(send_qty))
+                                        recv_inv = st.session_state.inventories[to_player]
+                                        add_item(recv_inv, nm, int(send_qty))
+                                        save_player_now(pname)
+                                        save_player_now(to_player)
+                                        add_notice(pname, f"Sent {int(send_qty)}× {nm} to {to_player}.", kind="trade", items=[nm])
+                                        add_notice(to_player, f"Received {int(send_qty)}× {nm} from {pname}.", kind="trade", items=[nm])
+                                        st.rerun()
+                            except Exception:
+                                with st.expander("Send to another player", expanded=False):
+                                    to_player = st.selectbox("Recipient", other_players, key=f"{pname}-send-to-{nm}")
+                                    send_qty = st.number_input("Amount", min_value=1, max_value=int(qty), value=1, step=1, key=f"{pname}-send-qty-{nm}")
+                                    if st.button("Send", key=f"{pname}-send-btn-{nm}"):
+                                        push_undo(pname, f"Send {int(send_qty)}x {nm} → {to_player}")
+                                        remove_item(inv, nm, int(send_qty))
+                                        recv_inv = st.session_state.inventories[to_player]
+                                        add_item(recv_inv, nm, int(send_qty))
+                                        save_player_now(pname)
+                                        save_player_now(to_player)
+                                        add_notice(pname, f"Sent {int(send_qty)}× {nm} to {to_player}.", kind="trade", items=[nm])
+                                        add_notice(to_player, f"Received {int(send_qty)}× {nm} from {pname}.", kind="trade", items=[nm])
+                                        st.rerun()
                         else:
                             st.caption("No other players to send items to.")
 
@@ -1140,7 +1156,6 @@ for idx, player in enumerate(st.session_state.players):
                         else:
                             if roll_total <= 0:
                                 st.error("Please enter your discovery roll total first.")
-                                st.stop()
 
                             push_undo(pname, f"Discovery attempt ({craft_prof})")
                             # Consume items immediately (success or fail). No XP on failure.
