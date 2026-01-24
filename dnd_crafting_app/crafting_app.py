@@ -997,7 +997,7 @@ for idx, player in enumerate(st.session_state.players):
                         st.write(f"Qty: **{qty}**")
                         st.caption(f"Sell: **{sell} gp**")
                     with right:
-                                    st.caption('')
+                        st.caption("")
                         bminus, bplus = st.columns(2)
                         with bminus:
                             if st.button("−", key=f"{pname}-inv-{nm}-minus"):
@@ -1020,8 +1020,7 @@ for idx, player in enumerate(st.session_state.players):
                             if st.button("Send", key=f"{pname}-send-btn-{nm}"):
                                 push_undo(pname, f"Send {int(send_qty)}x {nm} → {to_player}")
                                 remove_item(inv, nm, int(send_qty))
-                                recv_p = get_player(to_player)
-                                recv_inv = recv_p.setdefault("inventory", {})
+                                recv_inv = st.session_state.inventories[to_player]
                                 add_item(recv_inv, nm, int(send_qty))
                                 save_player_now(pname)
                                 save_player_now(to_player)
