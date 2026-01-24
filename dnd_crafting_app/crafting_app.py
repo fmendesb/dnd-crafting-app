@@ -597,11 +597,11 @@ def complete_job(pname: str, job: Dict[str, Any]):
             if rid not in pl.get("known_recipes", []):
                 pl.setdefault("known_recipes", []).append(rid)
             r = recipes_by_id[rid]
-            add_item(inv, canon_name(r.get("name", "")), 1)
+            # add_item(inv, canon_name(r.get("name", "")), 1)  # disabled: use D&D Beyond inventory
             xp_gain = int(job.get("xp_gain", 0))
             if xp_gain > 0:
                 apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
-            add_notice(pname, f"✅ Discovered **{r.get('name')}** (x1). Add to D&D Beyond manually.", kind="discover", items=job.get("items"))
+            add_notice(pname, f"✅ Discovered **{r.get('name')}**. Add to D&D Beyond manually.", kind="discover", items=job.get("items"))
         else:
             add_notice(pname, str(job.get("result_msg", "Discovery finished.")), kind="discover", items=job.get("items"))
 
@@ -611,11 +611,12 @@ def complete_job(pname: str, job: Dict[str, Any]):
             r = recipes_by_id[rid]
             out_qty = int(job.get("output_qty", 0) or 0)
             if out_qty <= 0:
-            out_qty = int(r.get("output_qty", 1) or 1)
+                out_qty = int(r.get("output_qty", 1) or 1)
+            # add_item(inv, canon_name(r.get("name", "")), out_qty)  # disabled: use D&D Beyond inventory
             xp_gain = int(job.get("xp_gain", 0))
             if xp_gain > 0:
                 apply_xp_delta(pl, canon_prof(r.get("profession", "")), xp_gain)
-            add_notice(pname, f"✅ Crafted **{r.get('name')}** (x{out_qty}). Add to D&D Beyond manually.", kind="craft", items=job.get("items"))
+            add_notice(pname, f"✅ Crafted **{r.get('name')}**. Add to D&D Beyond manually.", kind="craft", items=job.get("items"))
         else:
             add_notice(pname, str(job.get("result_msg", "Crafting finished.")), kind="craft", items=job.get("items"))
 
@@ -1008,7 +1009,7 @@ for idx, player in enumerate(st.session_state.players):
                     with mid:
                         st.write(f"Qty: **{qty}**")
                         st.caption(f"Sell: **{sell} gp**")
-                                        with right:
+                    with right:
                         bminus, bplus, _sp = st.columns([1, 1, 6])
                         with bminus:
                             if st.button("−", key=f"{pname}-inv-{nm}-minus"):
