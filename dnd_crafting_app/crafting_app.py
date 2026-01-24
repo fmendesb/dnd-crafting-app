@@ -1313,9 +1313,6 @@ with left:
             save_player_now(pname)
             st.rerun()
 
-with right:
-    st.caption("")
-st.divider()
 
         # ---- Vendor ----
         with st.expander("🧾 Vendor", expanded=False):
