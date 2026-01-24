@@ -477,9 +477,30 @@ def can_craft(inv: Dict[str, int], recipe: Dict[str, Any]) -> bool:
             return False
     return True
 
+
 def crafting_xp_from_components(recipe: Dict[str, Any]) -> int:
-    tiers = [int(ITEM_TIER.get(canon_name(c.get("name", "")), 1)) for c in recipe.get("components", [])]
-    return max(tiers) if tiers else int(recipe.get("tier", 1))
+    """XP awarded on a successful craft/discovery.
+
+    XP scales with the *amount* of materials consumed:
+    e.g. three T1 components => 3 XP.
+    """
+    xp = 0
+    for c in recipe.get("components", []) or []:
+        nm = canon_name(c.get("name", ""))
+        qty = int(c.get("qty", 1) or 1)
+        tier = int(ITEM_TIER.get(nm, int(recipe.get("tier", 1) or 1)))
+        xp += max(1, tier) * max(1, qty)
+    return int(xp or int(recipe.get("tier", 1) or 1))
+
+def crafts_possible(inv: Dict[str, int], recipe: Dict[str, Any]) -> int:
+    """How many times this recipe can currently be crafted from inventory."""
+    mins: List[int] = []
+    for c in recipe.get("components", []) or []:
+        nm = canon_name(c.get("name", ""))
+        need = int(c.get("qty", 1) or 1)
+        have = int(inv.get(nm, 0) or 0)
+        mins.append(have // need)
+    return int(min(mins) if mins else 0)
 
 def gathering_xp_for_item(item_name: str) -> int:
     return int(ITEM_TIER.get(canon_name(item_name), 1))
@@ -1192,14 +1213,15 @@ for idx, player in enumerate(st.session_state.players):
                             tier_recipes.sort(key=lambda x: (x.get("name", "") or "").lower())
                             for r in tier_recipes:
                                 nm = canon_name(r.get("name", ""))
-                                can = can_craft(inv, r)
+                                craftable_n = crafts_possible(inv, r)
                                 xp_gain = crafting_xp_from_components(r)
                                 dc = dc_for_target_tier(unlocked, t)
 
                                 st.write(f"**{nm}** ({tier_badge_html(unlocked, t)})", unsafe_allow_html=True)
                                 if r.get("description"):
                                     st.caption(r["description"])
-                                st.caption(f"DC {dc if dc else '—'} • XP if crafted: **{xp_gain}**")
+                                status = "✅ Craftable" if craftable_n > 0 else "❌ Missing materials"
+                                st.caption(f"{status} • Can craft: **{craftable_n}** • DC {dc if dc else '—'} • XP per craft: **{xp_gain}**")
 
                                 with st.expander("Show recipe details", expanded=False):
                                     for c in r.get("components", []):
@@ -1214,7 +1236,7 @@ for idx, player in enumerate(st.session_state.players):
                                 with left:
                                     # Require an in-game roll (total).
                                     roll_total = st.number_input("Craft roll total", min_value=0, step=1, key=f"craft_roll_{pname}_{r['id']}")
-                                    st.caption(f"DC {dc_for_tier(int(r.get('tier',1)), craft_unlocked_tier)} • Time: {fmt_seconds(int(TIMER_CRAFT_SEC.get(int(r.get('tier',1)), 60)))}")
+                                    st.caption(f"DC {dc_for_tier(int(r.get('tier',1)), unlocked)} • Time: {fmt_seconds(int(TIMER_CRAFT_SEC.get(int(r.get('tier',1)), 60)))}")
                                 
                                 with right:
                                     show_recipe_details(r)
@@ -1228,7 +1250,7 @@ for idx, player in enumerate(st.session_state.players):
                                         # Consume mats immediately (success or fail). No XP on failure.
                                         consume_recipe_mats(inv, r)
                                         tier = int(r.get("tier", 1))
-                                        dc = dc_for_tier(tier, craft_unlocked_tier)
+                                        dc = dc_for_tier(tier, unlocked)
                                         timer_sec = int(TIMER_CRAFT_SEC.get(tier, 60))
                                         success = bool(int(roll_total) >= dc)
                                         msg = ""
