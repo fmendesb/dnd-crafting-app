@@ -57,6 +57,10 @@ XP_TABLE = {int(k): int(v) for k, v in XP_TABLE_RAW.items()}
 # -----------------------------
 SELL_RATE = 0.5
 
+
+# Vendor: small chance to offer a recipe scroll of the player's current tier
+VENDOR_RECIPE_CHANCE = 0.05  # 5%
+RECIPE_SCROLL_PRICE_MULT = 5  # price = 10gp * tier * multiplier
 VENDOR_MAX_LINES = 3
 VENDOR_QTY_MAX = 4
 VENDOR_TIER_WEIGHTS = {"T": 0.90, "T+1": 0.20, "T+2": 0.05}
@@ -804,6 +808,36 @@ def generate_vendor_stock_for_prof(player: Dict[str, Any], chosen_prof: str) -> 
             "total_price": float(total),
             "unlocked_tier": unlocked,
         })
+    # Very small chance: offer a recipe scroll of the player's current tier
+    try:
+        import random as _rand
+        if _rand.random() < VENDOR_RECIPE_CHANCE:
+            skills = (player.get("skills") or {})
+            lvl = int((skills.get(chosen_prof, {}) or {}).get("level", 1))
+            cur_tier = max_tier_for_level(lvl)
+
+            known = set((player.get("known_recipes") or []))
+            candidates = [
+                r for r in RECIPES
+                if canon_prof(r.get("profession", "")) == canon_prof(chosen_prof)
+                and int(r.get("tier", 1) or 1) == int(cur_tier)
+                and r.get("id") not in known
+            ]
+            if candidates:
+                rec = _rand.choice(candidates)
+                tier = int(rec.get("tier", cur_tier) or cur_tier)
+                unit_price = int(10 * tier * RECIPE_SCROLL_PRICE_MULT)
+                lines.append({
+                    "type": "recipe",
+                    "recipe_id": rec.get("id"),
+                    "name": canon_name(rec.get("name", "Recipe")),
+                    "tier": tier,
+                    "qty": 1,
+                    "unit_price": unit_price,
+                })
+    except Exception:
+        pass
+
 
     return lines
 
@@ -1142,6 +1176,15 @@ for idx, player in enumerate(st.session_state.players):
                         st.info("This vendor has nothing useful right now.")
                     for i, line in enumerate(lines):
                         nm = canon_name(line.get("name", ""))
+                        # Vendor description / recipe details
+                        if line.get("type") == "recipe":
+                            rid = line.get("recipe_id")
+                            if rid in recipes_by_id and recipes_by_id[rid].get("description"):
+                                st.caption(recipes_by_id[rid].get("description"))
+                        else:
+                            desc = ITEM_DESC.get(nm) or ITEM_USE.get(nm) or ""
+                            if desc:
+                                st.caption(desc)
                         t = safe_int(line.get("tier", 1), 1)
                         qty = safe_int(line.get("qty", 1), 1)
                         unit = safe_float(line.get("unit_price", 0), 0.0)
