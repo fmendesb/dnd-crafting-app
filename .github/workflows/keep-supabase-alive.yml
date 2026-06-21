@@ -10,9 +10,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Ping Supabase
+      - name: Read player_state
         run: |
           curl -s \
             "${{ secrets.SUPABASE_REST_URL }}/player_state?select=player_name&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
+
+      - name: Update keepalive timestamp
+        run: |
+          curl -s -X PATCH \
+            "${{ secrets.SUPABASE_REST_URL }}/keepalive?id=eq.1" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -d '{"last_ping":"'"$(date -u +%Y-%m-%dT%H:%M:%SZ)"'"}'
