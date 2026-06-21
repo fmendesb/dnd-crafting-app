@@ -1,0 +1,42 @@
+name: Backup Player State
+
+on:
+schedule:
+- cron: '0 3 * * 0'
+workflow_dispatch:
+
+permissions:
+contents: write
+
+jobs:
+backup:
+runs-on: ubuntu-latest
+
+```
+steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+
+  - name: Create backup folder
+    run: mkdir -p backups
+
+  - name: Download player_state backup
+    run: |
+      curl -s \
+        "${{ secrets.SUPABASE_REST_URL }}/player_state?select=*" \
+        -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+        -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+        > backups/player_state_latest.json
+
+  - name: Commit backup
+    run: |
+      git config user.name "github-actions"
+      git config user.email "github-actions@github.com"
+
+      git add backups/player_state_latest.json
+
+      git diff --staged --quiet || (
+        git commit -m "Automated player_state backup"
+        git push
+      )
+```
