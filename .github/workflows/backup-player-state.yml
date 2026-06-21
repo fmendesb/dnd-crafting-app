@@ -39,4 +39,3 @@ steps:
         git commit -m "Automated player_state backup"
         git push
       )
-```
