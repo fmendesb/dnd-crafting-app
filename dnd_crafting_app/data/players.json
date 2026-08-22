@@ -1,6 +1,6 @@
 [
   {
-    "name": "Seraphine",
+    "name": "TestSeraphine",
     "skills": {
       "Mining": {
         "level": 1,
@@ -13,7 +13,7 @@
     }
   },
   {
-    "name": "Cadrie",
+    "name": "TestCadrie",
     "skills": {
       "Woodcrafter": {
         "level": 1,
@@ -26,7 +26,7 @@
     }
   },
   {
-    "name": "Val",
+    "name": "TestVal",
     "skills": {
       "Hunting": {
         "level": 1,
@@ -39,7 +39,7 @@
     }
   },
   {
-    "name": "Djinn",
+    "name": "TestDjinn",
     "skills": {
       "Herbalism": {
         "level": 1,
@@ -52,7 +52,7 @@
     }
   },
   {
-    "name": "Ashur",
+    "name": "TestAshur",
     "skills": {
       "Arcana Extraction": {
         "level": 1,
