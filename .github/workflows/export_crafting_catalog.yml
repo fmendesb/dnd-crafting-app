@@ -1,0 +1,35 @@
+name: Export Crafting Catalog
+
+on:
+  push:
+    branches: [sandbox]
+    paths:
+      - 'scripts/export_crafting_catalog.py'
+      - 'dnd_crafting_app/data/recipes.json'
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: sandbox
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate CSV export
+        run: python scripts/export_crafting_catalog.py
+      - name: Commit generated catalog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add crafting_catalog_export.csv
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: regenerate crafting catalog export"
+            git push origin sandbox
+          fi
